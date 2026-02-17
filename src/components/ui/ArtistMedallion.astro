@@ -1,0 +1,95 @@
+---
+import IconFacebook from "./icons/IconFacebook.astro";
+import IconInstagram from "./icons/IconInstagram.astro";
+import IconYouTube from "./icons/IconYouTube.astro";
+import IconLink from "./icons/IconLink.astro";
+
+interface SocialLinks {
+	website?: string;
+	facebook?: string;
+	instagram?: string;
+	youtube?: string;
+}
+
+interface Props {
+	name: string;
+	role: string;
+	bio: string;
+	imageSrc?: string;
+	links?: SocialLinks;
+}
+
+const { name, role, bio, imageSrc, links } = Astro.props;
+const hasLinks = Boolean(links?.website || links?.facebook || links?.instagram || links?.youtube);
+---
+
+<article class="group overflow-hidden rounded-lg border border-text-secondary/15 bg-bg-secondary/30 shadow-sm transition-colors">
+	<div class="aspect-[4/3] w-full bg-bg-secondary/40">
+		{imageSrc ? (
+			<img src={imageSrc} alt={name} class="h-full w-full object-cover" loading="lazy" decoding="async" />
+		) : (
+			<div class="flex h-full w-full items-center justify-center">
+				<div class="h-12 w-12 rounded-full bg-bg-secondary/60"></div>
+			</div>
+		)}
+	</div>
+
+	<div class="p-5">
+		<h3 class="font-heading text-lg font-semibold text-text-primary">{name}</h3>
+		<p class="mt-1 font-body text-sm text-text-secondary">{role}</p>
+		<p class="mt-4 font-body text-sm leading-relaxed text-text-secondary">{bio}</p>
+
+		{hasLinks && (
+			<div class="mt-5 flex flex-wrap gap-3">
+				{links?.website && (
+					<a
+						href={links.website}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="inline-flex items-center gap-2 rounded-md border border-text-secondary/20 bg-bg-primary/20 px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:text-accent"
+						aria-label={`${name} website`}
+					>
+						<IconLink class="h-4 w-4" />
+						<span>Website</span>
+					</a>
+				)}
+
+				{links?.facebook && (
+					<a
+						href={links.facebook}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="inline-flex items-center justify-center rounded-md border border-text-secondary/20 bg-bg-primary/20 p-2 text-text-secondary transition-colors hover:text-accent"
+						aria-label={`${name} on Facebook`}
+					>
+						<IconFacebook class="h-4 w-4" />
+					</a>
+				)}
+
+				{links?.instagram && (
+					<a
+						href={links.instagram}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="inline-flex items-center justify-center rounded-md border border-text-secondary/20 bg-bg-primary/20 p-2 text-text-secondary transition-colors hover:text-accent"
+						aria-label={`${name} on Instagram`}
+					>
+						<IconInstagram class="h-4 w-4" />
+					</a>
+				)}
+
+				{links?.youtube && (
+					<a
+						href={links.youtube}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="inline-flex items-center justify-center rounded-md border border-text-secondary/20 bg-bg-primary/20 p-2 text-text-secondary transition-colors hover:text-accent"
+						aria-label={`${name} on YouTube`}
+					>
+						<IconYouTube class="h-4 w-4" />
+					</a>
+				)}
+			</div>
+		)}
+	</div>
+</article>

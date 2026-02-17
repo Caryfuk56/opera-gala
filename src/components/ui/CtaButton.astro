@@ -1,0 +1,47 @@
+---
+interface Props {
+	href: string;
+	variant?: "primary" | "secondary" | "wine";
+	class?: string;
+}
+
+const { href, variant = "primary", class: className = "" } = Astro.props;
+
+const base =
+	"inline-flex items-center justify-center rounded px-6 py-3 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-primary";
+
+const variants: Record<string, string> = {
+	primary: "cta-primary text-text-primary shadow-md",
+	secondary: "cta-secondary text-text-primary",
+	wine: "border border-accent-wine text-text-primary hover:bg-accent-wine/10",
+};
+
+const classes = [base, variants[variant], className].filter(Boolean).join(" ");
+---
+
+<a href={href} class={classes}>
+	<slot />
+</a>
+
+<style is:global>
+	.cta-primary {
+		background: linear-gradient(135deg, #d4a35f 0%, #7a4a2a 100%);
+	}
+
+	.cta-primary:hover {
+		filter: brightness(1.1);
+	}
+
+	.cta-secondary {
+		background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.04) 0%, transparent 70%),
+			rgba(0, 0, 0, 0.25);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		-webkit-backdrop-filter: blur(6px);
+		backdrop-filter: blur(6px);
+	}
+
+	.cta-secondary:hover {
+		background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.06) 0%, transparent 70%),
+			rgba(0, 0, 0, 0.35);
+	}
+</style>

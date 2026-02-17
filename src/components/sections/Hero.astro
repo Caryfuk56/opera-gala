@@ -1,0 +1,57 @@
+---
+import { getI18n, getPath } from "../../i18n";
+import CtaButton from "../ui/CtaButton.astro";
+import heroImage from "../../assets/hero_image.png";
+
+interface Props {
+	lang: string;
+}
+
+const { lang } = Astro.props;
+const { t } = getI18n(lang);
+---
+
+<section class="relative grid min-h-screen grid-rows-[1fr_auto_1fr] overflow-hidden">
+	<img
+		src={heroImage.src}
+		alt=""
+		role="presentation"
+		class="absolute inset-0 h-full w-full object-cover object-top"
+		loading="eager"
+		decoding="async"
+	/>
+
+	<div class="relative z-10 row-start-1 flex items-end justify-center pb-6 pt-28 sm:pt-32 lg:pb-10">
+		<div class="text-center">
+			<h1 class="hero-headline font-display text-5xl font-bold text-text-primary sm:text-6xl lg:text-8xl">
+				{t.hero.title}
+			</h1>
+			<p class="mx-auto mt-3 max-w-xl font-body text-base text-text-secondary sm:text-lg">
+				{t.hero.subtitle}
+			</p>
+			<p class="mt-1 text-sm text-text-secondary">
+				{t.hero.location}
+			</p>
+		</div>
+	</div>
+
+	<div class="relative z-10 row-start-2 flex items-center justify-center py-6">
+		<div class="flex flex-col items-center gap-4 sm:flex-row">
+			<CtaButton href={getPath(lang, "program")} variant="primary">
+				{t.hero.ctaPrimary}
+			</CtaButton>
+			<CtaButton href={getPath(lang, "program")} variant="secondary">
+				{t.hero.ctaSecondary}
+			</CtaButton>
+		</div>
+	</div>
+
+	<div class="row-start-3"></div>
+</section>
+
+<style>
+	.hero-headline {
+		font-family: 'Spectral', ui-serif, Georgia, serif;
+		text-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+	}
+</style>

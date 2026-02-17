@@ -1,0 +1,26 @@
+---
+import { getI18n } from "../../i18n";
+
+interface Props {
+	lang: string;
+}
+
+const { lang } = Astro.props;
+const { t } = getI18n(lang);
+---
+
+<section class="bg-bg-secondary/50 py-16 lg:py-20">
+	<div class="container">
+		<h2 class="text-center font-heading text-xl font-semibold text-text-secondary sm:text-2xl">
+			{t.partners.title}
+		</h2>
+
+		<div class="mx-auto mt-10 flex max-w-3xl flex-wrap items-center justify-center gap-8 lg:gap-12">
+			{Array.from({ length: 5 }).map((_, i) => (
+				<div class="flex h-12 w-28 items-center justify-center rounded bg-bg-secondary/60 text-xs text-text-secondary/50 lg:h-14 lg:w-32">
+					Logo {i + 1}
+				</div>
+			))}
+		</div>
+	</div>
+</section>

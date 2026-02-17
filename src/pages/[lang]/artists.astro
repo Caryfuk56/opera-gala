@@ -1,0 +1,67 @@
+---
+import { getI18n, getStaticLangPaths } from "../../i18n";
+import Layout from "../../layouts/Layout.astro";
+import PageHeader from "../../components/ui/PageHeader.astro";
+import ArtistMedallion from "../../components/ui/ArtistMedallion.astro";
+import artistsHeroImage from "../../assets/barokni_zkouska.png";
+import robertHugoImage from "../../assets/varhany.png";
+import ensembleImage from "../../assets/hero_image.png";
+
+export const getStaticPaths = getStaticLangPaths;
+
+type TArtistMedia = Record<
+	string,
+		{
+			imageSrc?: string;
+			links?: {
+				website?: string;
+				facebook?: string;
+				instagram?: string;
+				youtube?: string;
+			};
+		}
+>;
+
+const { lang } = Astro.params;
+const { t } = getI18n(lang);
+
+const artistMedia: TArtistMedia = {
+	"Robert Hugo": {
+		imageSrc: robertHugoImage.src,
+	},
+};
+
+const artists = t.artistsPage.artists.map((artist) => ({
+	...artist,
+	imageSrc: artistMedia[artist.name]?.imageSrc ?? ensembleImage.src,
+	links: artistMedia[artist.name]?.links,
+}));
+---
+
+<Layout lang={lang} title={t.artistsPage.title}>
+	<PageHeader image={artistsHeroImage} title={t.artistsPage.title} subtitle={t.artistsPage.lead} imagePosition="center 35%" />
+
+	<section class="bg-bg-primary py-16 lg:py-24">
+		<div class="container">
+			<div class="mx-auto max-w-3xl">
+				{t.artistsPage.paragraphs.map((paragraph) => (
+					<p class="mt-6 font-body text-base leading-relaxed text-text-secondary lg:text-lg">
+						{paragraph}
+					</p>
+				))}
+			</div>
+
+			<div class="mx-auto mt-14 grid max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
+				{artists.map((artist) => (
+					<ArtistMedallion
+						name={artist.name}
+						role={artist.role}
+						bio={artist.bio}
+						imageSrc={artist.imageSrc}
+						links={artist.links}
+					/>
+				))}
+			</div>
+		</div>
+	</section>
+</Layout>

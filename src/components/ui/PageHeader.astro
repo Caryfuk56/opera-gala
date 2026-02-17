@@ -1,0 +1,47 @@
+---
+interface Props {
+	image: { src: string };
+	title: string;
+	subtitle?: string;
+	imagePosition?: string;
+	height?: string;
+}
+
+const {
+	image,
+	title,
+	subtitle,
+	imagePosition = "center 20%",
+	height = "h-[32vh] min-h-[260px] max-h-[420px]",
+} = Astro.props;
+---
+
+<section class={`relative ${height} overflow-hidden`}>
+	<div class="absolute inset-0">
+		<img
+			src={image.src}
+			alt=""
+			role="presentation"
+			class="h-full w-full object-cover"
+			style={`object-position: ${imagePosition};`}
+			loading="eager"
+			decoding="async"
+		/>
+	</div>
+
+	<div class="absolute inset-0 bg-gradient-to-b from-bg-primary/80 via-bg-primary/40 to-bg-primary/85"></div>
+
+	<div class="container relative z-10 flex h-full items-end pb-10 pt-16">
+		<div class="max-w-3xl">
+			<h1 class="font-heading text-3xl font-bold text-text-primary sm:text-4xl lg:text-5xl">
+				{title}
+			</h1>
+
+			{subtitle && (
+				<p class="mt-4 max-w-2xl font-body text-sm leading-relaxed text-text-primary/90 sm:text-base">
+					{subtitle}
+				</p>
+			)}
+		</div>
+	</div>
+</section>

@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	html {
+		@apply font-body;
+	}
+
+	body {
+		@apply bg-bg-primary text-text-primary antialiased;
+		line-height: theme('lineHeight.relaxed');
+	}
+
+	h1,
+	h2,
+	h3,
+	h4 {
+		@apply font-heading tracking-tight;
+	}
+}

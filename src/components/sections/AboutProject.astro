@@ -1,0 +1,45 @@
+---
+import { getI18n, getPath } from "../../i18n";
+
+interface Props {
+	lang: string;
+}
+
+const { lang } = Astro.props;
+const { t } = getI18n(lang);
+---
+
+<section class="bg-bg-secondary py-20 lg:py-28">
+	<div class="container">
+		<div class="mx-auto max-w-3xl">
+			<h2 class="font-heading text-3xl font-bold text-text-primary sm:text-4xl lg:text-5xl">
+				{t.about.title}
+			</h2>
+
+			{Array.isArray(t.about.text) ? (
+				t.about.text.map((paragraph, index) => (
+					<p
+						class:list={[
+							"font-body text-base leading-relaxed text-text-secondary lg:text-lg",
+							index === 0 ? "mt-6" : "mt-6",
+						]}
+					>
+						{paragraph}
+					</p>
+				))
+			) : (
+				<p class="mt-6 font-body text-base leading-relaxed text-text-secondary lg:text-lg">
+					{t.about.text}
+				</p>
+			)}
+
+			<a
+				href={getPath(lang, "about")}
+				class="mt-8 inline-flex items-center gap-2 font-medium text-accent transition-colors hover:text-accent-deep"
+			>
+				<span>&rarr;</span>
+				<span>{t.about.cta}</span>
+			</a>
+		</div>
+	</div>
+</section>

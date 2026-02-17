@@ -1,0 +1,137 @@
+---
+import { getI18n } from "../../../i18n";
+import Layout from "../../../layouts/Layout.astro";
+
+type CalendarEvent = {
+	id: string;
+	summary?: string;
+	description?: string;
+	start?: { dateTime?: string; date?: string };
+};
+
+type ParsedDescription = {
+	subtitle?: string;
+	ticket?: string;
+	program?: string;
+};
+
+function parseEventDescription(description: string | undefined): ParsedDescription {
+	if (!description) return {};
+
+	const lines = description.replaceAll("\r\n", "\n").split("\n");
+	const result: ParsedDescription = {};
+
+	let i = 0;
+	while (i < lines.length) {
+		const line = lines[i];
+		const match = line.match(/^([a-zA-Z]+):\s*(.*)$/);
+		if (!match) {
+			i += 1;
+			continue;
+		}
+
+		const key = match[1].toLowerCase();
+		const value = match[2] ?? "";
+
+		if (key === "program") {
+			const isBlock = value.trim() === "|";
+			if (!isBlock) {
+				result.program = value.trim();
+				i += 1;
+				continue;
+			}
+
+			i += 1;
+			const programLines: string[] = [];
+			while (i < lines.length) {
+				const next = lines[i];
+				if (/^[a-zA-Z]+:\s*/.test(next)) break;
+				programLines.push(next.replace(/^\s{2}/, ""));
+				i += 1;
+			}
+			result.program = programLines.join("\n").trim();
+			continue;
+		}
+
+		if (key === "subtitle") result.subtitle = value.trim();
+		if (key === "ticket") result.ticket = value.trim();
+		i += 1;
+	}
+
+	return result;
+}
+
+function getEventIsoDate(event: CalendarEvent): string | null {
+	return event.start?.dateTime ?? event.start?.date ?? null;
+}
+
+function formatDate(iso: string, lang: string): string {
+	const d = new Date(iso);
+	const day = new Intl.DateTimeFormat(lang, { day: "2-digit" }).format(d);
+	const month = new Intl.DateTimeFormat(lang, { month: "2-digit" }).format(d);
+	const year = new Intl.DateTimeFormat(lang, { year: "numeric" }).format(d);
+	return `${day}. ${month}. ${year}`;
+}
+
+async function fetchEventById(params: {
+	calendarId: string;
+	apiKey: string;
+	id: string;
+}): Promise<CalendarEvent | null> {
+	const { calendarId, apiKey, id } = params;
+	const url = new URL(
+		`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events/${encodeURIComponent(id)}`,
+	);
+	url.searchParams.set("key", apiKey);
+
+	const res = await fetch(url);
+	if (res.status === 404) return null;
+	if (!res.ok) {
+		const text = await res.text().catch(() => "");
+		throw new Error(`Google Calendar fetch failed: ${res.status} ${res.statusText} ${text}`);
+	}
+
+	return (await res.json()) as CalendarEvent;
+}
+
+const { lang: langParam, id } = Astro.params;
+const { lang, t } = getI18n(langParam);
+
+const apiKey = import.meta.env.GOOGLE_CALENDAR_API;
+const calendarId = import.meta.env.GOOGLE_CALENDAR_ID;
+
+if (!apiKey || !calendarId || !id) {
+	throw new Response(null, { status: 404 });
+}
+
+const event = await fetchEventById({ calendarId, apiKey, id });
+if (!event) {
+	throw new Response(null, { status: 404 });
+}
+
+const isoDate = getEventIsoDate(event);
+const dateLabel = isoDate ? formatDate(isoDate, lang) : "";
+const parsed = parseEventDescription(event.description);
+---
+
+<Layout lang={lang} title={event.summary ?? t.concerts.title}>
+	<section class="bg-bg-primary py-16 lg:py-24">
+		<div class="container">
+			<p class="font-body text-sm text-text-secondary">{dateLabel}</p>
+			<h1 class="mt-2 font-heading text-3xl font-bold text-text-primary sm:text-4xl lg:text-5xl">
+				{event.summary ?? ""}
+			</h1>
+
+			{parsed.subtitle && (
+				<p class="mt-4 max-w-3xl font-body text-base text-text-secondary">{parsed.subtitle}</p>
+			)}
+
+			{parsed.program && (
+				<div class="mt-10 rounded-lg border border-text-secondary/10 bg-bg-secondary/30 p-6">
+					<h2 class="font-heading text-lg font-semibold text-text-primary">Program</h2>
+					<pre class="mt-4 whitespace-pre-wrap font-body text-sm leading-relaxed text-text-secondary">{parsed.program}</pre>
+				</div>
+			)}
+		</div>
+	</section>
+</Layout>

@@ -1,0 +1,26 @@
+---
+import { getI18n, getStaticLangPaths } from "../../i18n";
+import Layout from "../../layouts/Layout.astro";
+import Hero from "../../components/sections/Hero.astro";
+import ConcertsPreview from "../../components/sections/ConcertsPreview.astro";
+import AboutProject from "../../components/sections/AboutProject.astro";
+import EnsemblePreview from "../../components/sections/EnsemblePreview.astro";
+import VenuePreview from "../../components/sections/VenuePreview.astro";
+import GalleryPreview from "../../components/sections/GalleryPreview.astro";
+import Partners from "../../components/sections/Partners.astro";
+
+export const getStaticPaths = getStaticLangPaths;
+
+const { lang } = Astro.params;
+const { t } = getI18n(lang);
+---
+
+<Layout lang={lang} title={`${t.hero.title} – Valtice`}>
+	<Hero lang={lang} />
+	<ConcertsPreview lang={lang} />
+	<AboutProject lang={lang} />
+	<EnsemblePreview lang={lang} />
+	<VenuePreview lang={lang} />
+	<GalleryPreview lang={lang} />
+	<Partners lang={lang} />
+</Layout>

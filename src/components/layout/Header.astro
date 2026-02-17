@@ -1,0 +1,276 @@
+---
+import { getI18n, getNavItems, getPath, getAlternateUrl } from "../../i18n";
+import logoSvg from "../../assets/CapellaRegia-logo-dvaRadky.svg";
+
+interface Props {
+	lang: string;
+}
+
+const { lang } = Astro.props;
+const { t, alternateLang } = getI18n(lang);
+const navItems = getNavItems(lang);
+const leftNav = navItems.slice(0, 3);
+const rightNav = navItems.slice(3);
+const alternateUrl = getAlternateUrl(Astro.url.pathname, lang, alternateLang);
+const homeHref = getPath(lang);
+---
+
+<header
+	id="site-header"
+	class="fixed top-0 left-0 right-0 z-40 py-4 lg:py-5 transition-all duration-300"
+>
+	<div class="container flex items-center justify-between lg:hidden">
+		<a href={homeHref} class="block">
+			<img src={logoSvg.src} alt="Cappella Regia" class="header-logo h-8" />
+		</a>
+
+		<button
+			id="menu-toggle"
+			class="p-2 text-text-primary"
+			type="button"
+			aria-label="Otevřít menu"
+			aria-expanded="false"
+			aria-controls="mobile-menu"
+		>
+			<svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+			</svg>
+		</button>
+	</div>
+
+	<nav class="container hidden lg:flex items-center" aria-label="Hlavní navigace">
+		<div class="flex flex-1 items-center gap-4 xl:gap-6">
+			{leftNav.map((item) => (
+				<a
+					href={item.href}
+					class="nav-link text-base text-text-primary hover:text-accent transition-all duration-300"
+				>
+					{item.label}
+				</a>
+			))}
+		</div>
+
+		<a href={homeHref} class="block px-6">
+			<img src={logoSvg.src} alt="Cappella Regia" class="header-logo h-12 transition-all duration-300" />
+		</a>
+
+		<div class="flex flex-1 items-center justify-end gap-4 xl:gap-6">
+			{rightNav.map((item) => (
+				<a
+					href={item.href}
+					class="nav-link text-base text-text-primary hover:text-accent transition-all duration-300"
+				>
+					{item.label}
+				</a>
+			))}
+			<div class="ml-4 flex items-center overflow-hidden rounded-md border border-text-secondary/30 text-sm font-medium">
+				<a
+					href={lang === "cs" ? "#" : alternateUrl}
+					class={lang === "cs" ? "bg-accent px-2 py-1 text-bg-primary" : "px-2 py-1 text-text-secondary hover:text-text-primary transition-colors"}
+					aria-current={lang === "cs" ? "true" : undefined}
+				>CZ</a>
+				<a
+					href={lang === "en" ? "#" : alternateUrl}
+					class={lang === "en" ? "bg-accent px-2 py-1 text-bg-primary" : "px-2 py-1 text-text-secondary hover:text-text-primary transition-colors"}
+					aria-current={lang === "en" ? "true" : undefined}
+				>EN</a>
+			</div>
+		</div>
+	</nav>
+</header>
+
+<!-- Mobile overlay -->
+<div
+	id="mobile-overlay"
+	class="fixed inset-0 z-50 bg-black/60 opacity-0 pointer-events-none transition-opacity duration-300"
+	aria-hidden="true"
+></div>
+
+<!-- Mobile menu panel -->
+<nav
+	id="mobile-menu"
+	class="fixed top-0 right-0 bottom-0 z-50 flex w-full flex-col bg-bg-primary transition-transform duration-300 translate-x-full md:w-3/4 md:max-w-md"
+	role="dialog"
+	aria-modal="true"
+	aria-label="Mobilní navigace"
+	aria-hidden="true"
+>
+	<div class="flex items-center justify-between border-b border-text-secondary/20 p-4">
+		<span class="font-heading font-semibold text-text-primary">Menu</span>
+		<button
+			id="menu-close"
+			class="p-2 text-text-primary"
+			type="button"
+			aria-label="Zavřít menu"
+		>
+			<svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+			</svg>
+		</button>
+	</div>
+
+	<div class="flex-1 overflow-y-auto px-4 py-6">
+		<ul class="space-y-1">
+			{navItems.map((item) => (
+				<li>
+					<a
+						href={item.href}
+						class="block rounded-md px-4 py-3 text-lg text-text-primary hover:bg-bg-secondary hover:text-accent transition-colors"
+					>
+						{item.label}
+					</a>
+				</li>
+			))}
+		</ul>
+	</div>
+
+	<div class="border-t border-text-secondary/20 p-4">
+		<div class="mx-auto flex w-fit items-center overflow-hidden rounded-md border border-text-secondary/30 text-sm font-medium">
+			<a
+				href={lang === "cs" ? "#" : alternateUrl}
+				class={lang === "cs" ? "bg-accent px-4 py-2 text-bg-primary" : "px-4 py-2 text-text-secondary hover:text-text-primary transition-colors"}
+				aria-current={lang === "cs" ? "true" : undefined}
+			>CZ</a>
+			<a
+				href={lang === "en" ? "#" : alternateUrl}
+				class={lang === "en" ? "bg-accent px-4 py-2 text-bg-primary" : "px-4 py-2 text-text-secondary hover:text-text-primary transition-colors"}
+				aria-current={lang === "en" ? "true" : undefined}
+			>EN</a>
+		</div>
+	</div>
+</nav>
+
+<style is:global>
+	.header-logo {
+		width: auto;
+		filter: brightness(0) invert(1);
+		opacity: 0.9;
+		transition: opacity 0.2s ease;
+	}
+
+	.header-logo:hover {
+		opacity: 1;
+	}
+
+	#site-header[data-scrolled] {
+		@apply bg-bg-primary shadow-md;
+		padding-top: 0.5rem;
+		padding-bottom: 0.5rem;
+		backdrop-filter: blur(8px);
+	}
+
+	#site-header[data-scrolled] .nav-link {
+		font-size: 0.875rem;
+	}
+
+	#site-header[data-scrolled] .header-logo {
+		height: 2.25rem;
+	}
+
+	@media (min-width: 1024px) {
+		#site-header[data-scrolled] {
+			padding-top: 0.75rem;
+			padding-bottom: 0.75rem;
+		}
+
+		#site-header[data-scrolled] .header-logo {
+			height: 2.5rem;
+		}
+	}
+</style>
+
+<script>
+	// --- Scroll detection ---
+	const header = document.getElementById("site-header");
+	const SCROLL_THRESHOLD = 50;
+
+	function updateHeaderScroll() {
+		if (!header) return;
+		if (window.scrollY > SCROLL_THRESHOLD) {
+			header.setAttribute("data-scrolled", "");
+		} else {
+			header.removeAttribute("data-scrolled");
+		}
+	}
+
+	window.addEventListener("scroll", updateHeaderScroll, { passive: true });
+	updateHeaderScroll();
+
+	// --- Mobile menu ---
+	const menuToggle = document.getElementById("menu-toggle");
+	const menuClose = document.getElementById("menu-close");
+	const mobileMenu = document.getElementById("mobile-menu");
+	const mobileOverlay = document.getElementById("mobile-overlay");
+
+	function openMenu() {
+		if (!mobileMenu || !mobileOverlay || !menuToggle) return;
+
+		mobileMenu.classList.remove("translate-x-full");
+		mobileMenu.classList.add("translate-x-0");
+		mobileMenu.setAttribute("aria-hidden", "false");
+
+		mobileOverlay.classList.remove("opacity-0", "pointer-events-none");
+		mobileOverlay.classList.add("opacity-100", "pointer-events-auto");
+
+		menuToggle.setAttribute("aria-expanded", "true");
+		document.body.style.overflow = "hidden";
+
+		menuClose?.focus();
+		document.addEventListener("keydown", handleKeyDown);
+	}
+
+	function closeMenu() {
+		if (!mobileMenu || !mobileOverlay || !menuToggle) return;
+
+		mobileMenu.classList.add("translate-x-full");
+		mobileMenu.classList.remove("translate-x-0");
+		mobileMenu.setAttribute("aria-hidden", "true");
+
+		mobileOverlay.classList.add("opacity-0", "pointer-events-none");
+		mobileOverlay.classList.remove("opacity-100", "pointer-events-auto");
+
+		menuToggle.setAttribute("aria-expanded", "false");
+		document.body.style.overflow = "";
+
+		menuToggle.focus();
+		document.removeEventListener("keydown", handleKeyDown);
+	}
+
+	function handleKeyDown(e: KeyboardEvent) {
+		if (e.key === "Escape") {
+			closeMenu();
+			return;
+		}
+
+		if (e.key === "Tab" && mobileMenu) {
+			const focusable = mobileMenu.querySelectorAll<HTMLElement>(
+				'a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])'
+			);
+
+			if (focusable.length === 0) return;
+
+			const first = focusable[0];
+			const last = focusable[focusable.length - 1];
+
+			if (e.shiftKey) {
+				if (document.activeElement === first) {
+					e.preventDefault();
+					last.focus();
+				}
+			} else {
+				if (document.activeElement === last) {
+					e.preventDefault();
+					first.focus();
+				}
+			}
+		}
+	}
+
+	menuToggle?.addEventListener("click", openMenu);
+	menuClose?.addEventListener("click", closeMenu);
+	mobileOverlay?.addEventListener("click", closeMenu);
+
+	mobileMenu?.querySelectorAll("a[href]").forEach((link) => {
+		link.addEventListener("click", closeMenu);
+	});
+</script>

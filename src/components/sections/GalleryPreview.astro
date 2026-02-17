@@ -1,0 +1,40 @@
+---
+import { getI18n, getPath } from "../../i18n";
+import GalleryModal from "../gallery/GalleryModal";
+import galleryData from "../../data/gallery.json";
+
+interface Props {
+	lang: string;
+}
+
+const { lang } = Astro.props;
+const { t } = getI18n(lang);
+
+const images = galleryData.slice(0, 5);
+const galleryHref = getPath(lang, "gallery");
+---
+
+<section class="bg-bg-primary py-20 lg:py-28">
+	<div class="container">
+		<h2 class="font-heading text-2xl font-bold text-text-primary sm:text-3xl">
+			{t.gallery.title}
+		</h2>
+
+		<GalleryModal
+			images={images}
+			galleryHref={galleryHref}
+			ctaLabel={t.gallery.cta}
+			client:visible
+		/>
+
+		<div class="mt-8">
+			<a
+				href={galleryHref}
+				class="inline-flex items-center gap-2 font-medium text-accent transition-colors hover:text-accent-deep"
+			>
+				<span>&rarr;</span>
+				<span>{t.gallery.cta}</span>
+			</a>
+		</div>
+	</div>
+</section>

@@ -1,0 +1,122 @@
+---
+import { getI18n, getNavItems, getAlternateUrl } from "../../i18n";
+import IconFacebook from "../ui/icons/IconFacebook.astro";
+import IconInstagram from "../ui/icons/IconInstagram.astro";
+import IconYouTube from "../ui/icons/IconYouTube.astro";
+
+interface Props {
+	lang: string;
+}
+
+const { lang } = Astro.props;
+const { t, alternateLang } = getI18n(lang);
+const navItems = getNavItems(lang);
+const alternateUrl = getAlternateUrl(Astro.url.pathname, lang, alternateLang);
+---
+
+<footer class="bg-bg-secondary">
+	<div class="container py-12 lg:py-16">
+		<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4 lg:gap-12">
+			<!-- About -->
+			<div>
+				<h3 class="mb-3 text-lg font-heading font-semibold text-text-primary">
+					Opera Gala Valtice
+				</h3>
+				<p class="text-sm text-text-secondary">
+					{t.footer.description}
+				</p>
+			</div>
+
+			<!-- Navigation -->
+			<div>
+				<h3 class="mb-3 text-sm font-heading font-semibold uppercase tracking-wider text-text-primary">
+					{t.footer.navigation}
+				</h3>
+				<ul class="space-y-2">
+					{navItems.map((item) => (
+						<li>
+							<a
+								href={item.href}
+								class="text-sm text-text-secondary hover:text-accent transition-colors"
+							>
+								{item.label}
+							</a>
+						</li>
+					))}
+				</ul>
+			</div>
+
+			<!-- Contact -->
+			<div>
+				<h3 class="mb-3 text-sm font-heading font-semibold uppercase tracking-wider text-text-primary">
+					{t.footer.contact}
+				</h3>
+				<ul class="space-y-2 text-sm text-text-secondary">
+					<li>
+						<a
+							href="mailto:info@opera-gala.cz"
+							class="hover:text-accent transition-colors"
+						>
+							info@opera-gala.cz
+						</a>
+					</li>
+					<li>
+						<a
+							href="tel:+420123456789"
+							class="hover:text-accent transition-colors"
+						>
+							+420 123 456 789
+						</a>
+					</li>
+				</ul>
+			</div>
+
+			<!-- Social + Language -->
+			<div>
+				<h3 class="mb-3 text-sm font-heading font-semibold uppercase tracking-wider text-text-primary">
+					{t.footer.social}
+				</h3>
+				<div class="mb-6 flex gap-4">
+					<a
+						href="#"
+						class="text-text-secondary hover:text-accent transition-colors"
+						aria-label="Facebook"
+					>
+						<IconFacebook class="h-5 w-5" />
+					</a>
+					<a
+						href="#"
+						class="text-text-secondary hover:text-accent transition-colors"
+						aria-label="Instagram"
+					>
+						<IconInstagram class="h-5 w-5" />
+					</a>
+					<a
+						href="#"
+						class="text-text-secondary hover:text-accent transition-colors"
+						aria-label="YouTube"
+					>
+						<IconYouTube class="h-5 w-5" />
+					</a>
+				</div>
+
+				<div class="flex w-fit items-center overflow-hidden rounded-md border border-text-secondary/30 text-sm font-medium">
+					<a
+						href={lang === "cs" ? "#" : alternateUrl}
+						class={lang === "cs" ? "bg-accent px-3 py-1.5 text-bg-primary" : "px-3 py-1.5 text-text-secondary hover:text-text-primary transition-colors"}
+						aria-current={lang === "cs" ? "true" : undefined}
+					>CZ</a>
+					<a
+						href={lang === "en" ? "#" : alternateUrl}
+						class={lang === "en" ? "bg-accent px-3 py-1.5 text-bg-primary" : "px-3 py-1.5 text-text-secondary hover:text-text-primary transition-colors"}
+						aria-current={lang === "en" ? "true" : undefined}
+					>EN</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="mt-10 border-t border-text-secondary/20 pt-6 text-center text-xs text-text-secondary">
+			<p>&copy; {new Date().getFullYear()} Opera Gala Valtice. {t.footer.copyright}</p>
+		</div>
+	</div>
+</footer>
