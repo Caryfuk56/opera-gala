@@ -1,7 +1,9 @@
 ---
+import TicketIcon from "../icons/TicketIcon.astro";
+
 interface Props {
 	href: string;
-	variant?: "primary" | "secondary" | "wine";
+	variant?: "primary" | "secondary" | "highlighted";
 	class?: string;
 }
 
@@ -11,9 +13,9 @@ const base =
 	"inline-flex items-center justify-center rounded px-6 py-3 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-primary";
 
 const variants: Record<string, string> = {
-	primary: "cta-primary text-text-primary shadow-md",
+	primary: "cta-primary text-text-primary shadow-md uppercase tracking-wide",
 	secondary: "cta-secondary text-text-primary",
-	wine: "border border-accent-wine text-text-primary hover:bg-accent-wine/10",
+	highlighted: "bg-[#FBFBFB] text-[#7a4a2a] uppercase tracking-wide shadow-sm hover:shadow-md hover:bg-white",
 };
 
 const classes = [base, variants[variant], className].filter(Boolean).join(" ");
@@ -21,11 +23,12 @@ const classes = [base, variants[variant], className].filter(Boolean).join(" ");
 
 <a href={href} class={classes}>
 	<slot />
+	{variant === "highlighted" && <TicketIcon class="ml-2" size={18} />}
 </a>
 
 <style is:global>
 	.cta-primary {
-		background: linear-gradient(135deg, #d4a35f 0%, #7a4a2a 100%);
+		background: linear-gradient(180deg, #d4a35f 0%, #7a4a2a 100%);
 	}
 
 	.cta-primary:hover {
