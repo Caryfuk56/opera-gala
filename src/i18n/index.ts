@@ -27,7 +27,7 @@ export function getPath(lang: string, slug: string = "") {
 export function getNavItems(lang: string) {
 	const { t } = getI18n(lang);
 	return [
-		{ label: t.nav.program, href: getPath(lang, "program") },
+		{ label: t.nav.program, href: getPath(lang, "concert") },
 		{ label: t.nav.about, href: getPath(lang, "about") },
 		{ label: t.nav.artists, href: getPath(lang, "artists") },
 		{ label: t.nav.gallery, href: getPath(lang, "gallery") },

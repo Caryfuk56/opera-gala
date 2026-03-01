@@ -1,105 +1,10 @@
 ---
-import { getI18n, getPath, getStaticLangPaths } from "../../i18n";
+import { getI18n, getStaticLangPaths } from "../../i18n";
 import Layout from "../../layouts/Layout.astro";
-import CtaButton from "../../components/ui/CtaButton.astro";
+import ConcertPanel from "../../components/sections/ConcertPanel.astro";
+import { fetchUpcomingEvents, parseEventDescription, getEventIsoDate, formatDate, type CalendarEvent } from "../../utils/googleCalendar";
 
 export const getStaticPaths = getStaticLangPaths;
-
-type CalendarEvent = {
-	id: string;
-	summary?: string;
-	description?: string;
-	start?: { dateTime?: string; date?: string };
-};
-
-type ParsedDescription = {
-	subtitle?: string;
-	ticket?: string;
-	program?: string;
-};
-
-function parseEventDescription(description: string | undefined): ParsedDescription {
-	if (!description) return {};
-
-	const lines = description.replaceAll("\r\n", "\n").split("\n");
-	const result: ParsedDescription = {};
-
-	let i = 0;
-	while (i < lines.length) {
-		const line = lines[i];
-		const match = line.match(/^([a-zA-Z]+):\s*(.*)$/);
-		if (!match) {
-			i += 1;
-			continue;
-		}
-
-		const key = match[1].toLowerCase();
-		const value = match[2] ?? "";
-
-		if (key === "program") {
-			const isBlock = value.trim() === "|";
-			if (!isBlock) {
-				result.program = value.trim();
-				i += 1;
-				continue;
-			}
-
-			i += 1;
-			const programLines: string[] = [];
-			while (i < lines.length) {
-				const next = lines[i];
-				if (/^[a-zA-Z]+:\s*/.test(next)) break;
-				programLines.push(next.replace(/^\s{2}/, ""));
-				i += 1;
-			}
-			result.program = programLines.join("\n").trim();
-			continue;
-		}
-
-		if (key === "subtitle") result.subtitle = value.trim();
-		if (key === "ticket") result.ticket = value.trim();
-		i += 1;
-	}
-
-	return result;
-}
-
-function getEventIsoDate(event: CalendarEvent): string | null {
-	return event.start?.dateTime ?? event.start?.date ?? null;
-}
-
-function formatDate(iso: string, lang: string): string {
-	const d = new Date(iso);
-	const day = new Intl.DateTimeFormat(lang, { day: "2-digit" }).format(d);
-	const month = new Intl.DateTimeFormat(lang, { month: "2-digit" }).format(d);
-	const year = new Intl.DateTimeFormat(lang, { year: "numeric" }).format(d);
-	return `${day}. ${month}. ${year}`;
-}
-
-async function fetchUpcomingEvents(params: {
-	calendarId: string;
-	apiKey: string;
-	maxResults: number;
-}): Promise<CalendarEvent[]> {
-	const { calendarId, apiKey, maxResults } = params;
-	const timeMin = new Date().toISOString();
-
-	const url = new URL(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events`);
-	url.searchParams.set("key", apiKey);
-	url.searchParams.set("singleEvents", "true");
-	url.searchParams.set("orderBy", "startTime");
-	url.searchParams.set("timeMin", timeMin);
-	url.searchParams.set("maxResults", String(maxResults));
-
-	const res = await fetch(url);
-	if (!res.ok) {
-		const text = await res.text().catch(() => "");
-		throw new Error(`Google Calendar fetch failed: ${res.status} ${res.statusText} ${text}`);
-	}
-
-	const data = (await res.json()) as { items?: CalendarEvent[] };
-	return data.items ?? [];
-}
 
 const { lang } = Astro.params;
 const { t } = getI18n(lang);
@@ -136,37 +41,19 @@ if (!apiKey || !calendarId) {
 				<div class="mt-12 space-y-6">
 					{events.map((event) => {
 						const isoDate = getEventIsoDate(event);
-						const dateLabel = isoDate ? formatDate(isoDate, lang) : "";
+						const dateObj = isoDate ? formatDate(isoDate, lang, "full") : { day: "", month: "", year: "" };
 						const parsed = parseEventDescription(event.description);
-						const href = getPath(lang, `concert/${event.id}`);
 
 						return (
-							<article class="flex flex-col gap-4 rounded-lg border border-text-secondary/10 bg-bg-secondary/30 p-6 sm:flex-row sm:items-center sm:gap-8">
-								<div class="flex-shrink-0 text-center sm:w-32">
-									<span class="block font-heading text-2xl font-bold text-accent lg:text-3xl">
-										{dateLabel}
-									</span>
-								</div>
-
-								<div class="flex-1">
-									<h2 class="font-heading text-lg font-semibold text-text-primary lg:text-xl">
-										<a href={href} class="hover:underline">
-											{event.summary ?? ""}
-										</a>
-									</h2>
-									{parsed.subtitle && (
-										<p class="mt-1 font-body text-sm text-text-secondary">{parsed.subtitle}</p>
-									)}
-								</div>
-
-								{parsed.ticket && (
-									<div class="flex-shrink-0">
-										<CtaButton href={parsed.ticket} variant="wine">
-											{t.concerts.tickets}
-										</CtaButton>
-									</div>
-								)}
-							</article>
+							<ConcertPanel
+								id={event.id}
+								title={event.summary ?? ""}
+								subtitle={parsed.subtitle}
+								date={dateObj}
+								ticketUrl={parsed.ticket}
+								lang={lang}
+								dateVariant="full"
+							/>
 						);
 					})}
 				</div>

@@ -1,6 +1,8 @@
 ---
 import { getI18n, getPath } from "../../i18n";
 import CtaButton from "../ui/CtaButton.astro";
+import ConcertPanel from "./ConcertPanel.astro";
+import { fetchUpcomingEvents, parseEventDescription, getEventIsoDate, formatDate, type CalendarEvent } from "../../utils/googleCalendar";
 
 interface Props {
 	lang: string;
@@ -9,47 +11,58 @@ interface Props {
 const { lang } = Astro.props;
 const { t } = getI18n(lang);
 
-const concerts = [
-	{ day: "14", month: lang === "cs" ? "června" : "June", name: "Händel: Giulio Cesare", location: "Zámek Valtice – Mramorový sál" },
-	{ day: "28", month: lang === "cs" ? "června" : "June", name: "Vivaldi: La Stravaganza", location: "Zámek Valtice – Zámecká kaple" },
-	{ day: "12", month: lang === "cs" ? "července" : "July", name: "Bach: Braniborské koncerty", location: "Zámek Valtice – Mramorový sál" },
-];
+const apiKey = import.meta.env.GOOGLE_CALENDAR_API;
+const calendarId = import.meta.env.GOOGLE_CALENDAR_ID;
+
+let events: CalendarEvent[] = [];
+let loadError: string | null = null;
+
+if (!apiKey || !calendarId) {
+	loadError = t.concerts.error;
+} else {
+	try {
+		events = await fetchUpcomingEvents({ calendarId, apiKey, maxResults: 3 });
+	} catch (err) {
+		loadError = t.concerts.error;
+	}
+}
 ---
 
 <section class="bg-bg-primary py-20 lg:py-28">
 	<div class="container">
-		<h2 class="font-heading text-3xl font-bold text-text-primary sm:text-4xl lg:text-5xl">
-			{t.concerts.title}
-		</h2>
-
-		<div class="mt-12 space-y-6">
-			{concerts.map((concert) => (
-				<article class="flex flex-col gap-4 rounded-lg border border-text-secondary/10 bg-bg-secondary/30 p-6 sm:flex-row sm:items-center sm:gap-8">
-					<div class="flex-shrink-0 text-center sm:w-24">
-						<span class="block font-heading text-4xl font-bold text-accent lg:text-5xl">
-							{concert.day}
-						</span>
-						<span class="block text-sm uppercase tracking-wider text-text-secondary">
-							{concert.month}
-						</span>
-					</div>
-
-					<div class="flex-1">
-						<h3 class="font-heading text-lg font-semibold text-text-primary lg:text-xl">
-							{concert.name}
-						</h3>
-						<p class="mt-1 text-sm text-text-secondary">
-							{concert.location}
-						</p>
-					</div>
-
-					<div class="flex-shrink-0">
-						<CtaButton href={getPath(lang, "concert")} variant="wine">
-							{t.concerts.tickets}
-						</CtaButton>
-					</div>
-				</article>
-			))}
+		<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
+			<h2 class="font-heading text-3xl font-bold text-text-primary sm:text-4xl lg:text-5xl">
+				{t.concerts.title}
+			</h2>
+			<CtaButton href={getPath(lang, "concert")} variant="secondary">
+				{t.hero.ctaSecondary}
+			</CtaButton>
 		</div>
+
+		{loadError ? (
+			<p class="mt-8 font-body text-base text-text-secondary">{loadError}</p>
+		) : events.length === 0 ? (
+			<p class="mt-8 font-body text-base text-text-secondary">{t.concerts.empty}</p>
+		) : (
+			<div class="mt-12 space-y-4">
+				{events.map((event) => {
+					const isoDate = getEventIsoDate(event);
+					const dateObj = isoDate ? formatDate(isoDate, lang, "short") : { day: "", month: "", year: "" };
+					const parsed = parseEventDescription(event.description);
+
+					return (
+						<ConcertPanel
+							id={event.id}
+							title={event.summary ?? ""}
+							subtitle={parsed.subtitle}
+							date={dateObj}
+							ticketUrl={parsed.ticket}
+							lang={lang}
+							dateVariant="short"
+						/>
+					);
+				})}
+			</div>
+		)}
 	</div>
 </section>
