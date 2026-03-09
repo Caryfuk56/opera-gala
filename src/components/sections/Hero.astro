@@ -5,24 +5,29 @@ import heroImage from "../../assets/hero_image.png";
 
 interface Props {
 	lang: string;
+	nextConcertId?: string;
 }
 
-const { lang } = Astro.props;
+const { lang, nextConcertId } = Astro.props;
 const { t } = getI18n(lang);
+
+const primaryCtaLink = nextConcertId 
+	? getPath(lang, `concert/${nextConcertId}`) 
+	: getPath(lang, "program");
 ---
 
-<section class="relative grid min-h-screen grid-rows-[1fr_auto_1fr] overflow-hidden">
+<section class="relative grid min-h-screen grid-rows-[1fr_auto] overflow-hidden">
 	<img
 		src={heroImage.src}
 		alt=""
 		role="presentation"
-		class="absolute inset-0 h-full w-full object-cover object-top"
+		class="absolute inset-0 h-full w-full object-cover object-bottom"
 		loading="eager"
 		decoding="async"
 	/>
 
-	<div class="relative z-10 row-start-1 flex items-end justify-center pb-6 pt-28 sm:pt-32 lg:pb-10">
-		<div class="text-center">
+	<div class="relative z-10 row-start-1 flex items-center justify-center pb-80 pt-28 sm:pt-0 lg:pb-80">
+		<div class="text-center px-4">
 			<h1 class="hero-headline font-display text-5xl font-bold text-text-primary sm:text-6xl lg:text-8xl">
 				{t.hero.title}
 			</h1>
@@ -35,18 +40,16 @@ const { t } = getI18n(lang);
 		</div>
 	</div>
 
-	<div class="relative z-10 row-start-2 flex items-center justify-center py-6">
-		<div class="flex flex-col items-center gap-4 sm:flex-row">
-			<CtaButton href={getPath(lang, "program")} variant="primary">
+	<div class="absolute bottom-0 left-0 right-0 z-10 flex items-end justify-center pb-36 sm:pb-80 lg:pb-80">
+		<div class="flex flex-col items-center gap-4 sm:flex-row w-full justify-center px-4">
+			<CtaButton href={primaryCtaLink} variant="primary" class="w-full sm:w-64 justify-center">
 				{t.hero.ctaPrimary}
 			</CtaButton>
-			<CtaButton href={getPath(lang, "program")} variant="secondary">
+			<CtaButton href={getPath(lang, "concert")} variant="secondary" class="w-full sm:w-64 justify-center">
 				{t.hero.ctaSecondary}
 			</CtaButton>
 		</div>
 	</div>
-
-	<div class="row-start-3"></div>
 </section>
 
 <style>

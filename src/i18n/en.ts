@@ -14,7 +14,7 @@ const en = {
 	hero: {
 		title: "Opera Gala",
 		subtitle: "An unforgettable evening of baroque music",
-		location: "Cappella Regia · Valtice",
+		location: "Ochrestr Valtického Divadla · Valtice",
 		ctaPrimary: "Upcoming concert",
 		ctaSecondary: "Full program",
 	},
@@ -86,7 +86,7 @@ const en = {
 		],
 	},
 	ensemble: {
-		title: "Cappella Regia",
+		title: "Ochrestr Valtického Divadla",
 		text: "The newly established Chamber Orchestra of the Valtice Theatre brings together leading Czech orchestral players and specialists in historical performance. Authentic sound, stylistically informed interpretation, and period instruments under the artistic direction of Robert Hugo.",
 		cta: "Artists & ensemble",
 	},
