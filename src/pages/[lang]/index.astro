@@ -8,15 +8,32 @@ import EnsemblePreview from "../../components/sections/EnsemblePreview.astro";
 import VenuePreview from "../../components/sections/VenuePreview.astro";
 import GalleryPreview from "../../components/sections/GalleryPreview.astro";
 import Partners from "../../components/sections/Partners.astro";
+import { fetchUpcomingEvents } from "../../utils/googleCalendar";
 
 export const getStaticPaths = getStaticLangPaths;
 
 const { lang } = Astro.params;
 const { t } = getI18n(lang);
+
+const apiKey = import.meta.env.GOOGLE_CALENDAR_API;
+const calendarId = import.meta.env.GOOGLE_CALENDAR_ID;
+
+let nextConcertId: string | undefined;
+
+if (apiKey && calendarId) {
+	try {
+		const events = await fetchUpcomingEvents({ calendarId, apiKey, maxResults: 1 });
+		if (events.length > 0) {
+			nextConcertId = events[0].id;
+		}
+	} catch (error) {
+		console.error("Error fetching next concert:", error);
+	}
+}
 ---
 
 <Layout lang={lang} title={`${t.hero.title} – Valtice`}>
-	<Hero lang={lang} />
+	<Hero lang={lang} nextConcertId={nextConcertId} />
 	<ConcertsPreview lang={lang} />
 	<AboutProject lang={lang} />
 	<EnsemblePreview lang={lang} />
