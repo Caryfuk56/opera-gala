@@ -6,9 +6,10 @@ import Footer from "../components/layout/Footer.astro";
 interface Props {
 	lang: string;
 	title?: string;
+	description?: string;
 }
 
-const { lang, title = "Opera Gala Valtice" } = Astro.props;
+const { lang, title = "Opera Gala Valtice", description } = Astro.props;
 ---
 
 <!doctype html>
@@ -16,6 +17,7 @@ const { lang, title = "Opera Gala Valtice" } = Astro.props;
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		{description && <meta name="description" content={description} />}
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />

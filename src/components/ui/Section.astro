@@ -1,0 +1,155 @@
+---
+interface Props {
+	variant?: "plain" | "image-left" | "image-right";
+	background?: "light" | "dark" | "parallax";
+	image?: {
+		src: string;
+		alt: string;
+		caption?: string;
+		href?: string;
+	};
+	parallaxStrength?: number;
+	className?: string;
+}
+
+const {
+	variant = "plain",
+	background = "light",
+	image,
+	parallaxStrength = 0.5,
+	className = "",
+} = Astro.props;
+
+const bgClasses = {
+	light: "bg-bg-primary text-text-secondary",
+	dark: "bg-bg-secondary text-text-secondary",
+	parallax: "bg-transparent text-white relative overflow-hidden",
+};
+
+const isParallax = background === "parallax";
+const hasImage = variant !== "plain" && !!image;
+---
+
+<section
+	class:list={[
+		"relative py-16 lg:py-24",
+		bgClasses[background],
+		className,
+	]}
+>
+	{
+		isParallax && image && (
+			<div class="absolute inset-0 -z-10 h-[120%] w-full overflow-hidden">
+				<div
+					class="parallax-bg absolute inset-0 h-full w-full bg-cover bg-center will-change-transform"
+					data-parallax-strength={parallaxStrength}
+					style={`background-image: url('${image.src}');`}
+				/>
+				<div class="absolute inset-0 bg-black/60" />
+			</div>
+		)
+	}
+
+	<div class="container relative z-10">
+		<div
+			class:list={[
+				"grid gap-12 lg:gap-16",
+				hasImage ? "lg:grid-cols-2 lg:items-start" : "max-w-4xl mx-auto",
+			]}
+		>
+			{/* Text Content */}
+			<div
+				class:list={[
+					"order-2",
+					variant === "image-left" ? "lg:order-2" : "lg:order-1",
+				]}
+			>
+				<slot />
+			</div>
+
+			{/* Image Content (Non-parallax) */}
+			{
+				!isParallax && hasImage && (
+					<div
+						class:list={[
+							"order-1",
+							variant === "image-left" ? "lg:order-1" : "lg:order-2",
+						]}
+					>
+						<figure class="group relative">
+							{image.href ? (
+								<a
+									href={image.href}
+									class="block overflow-hidden rounded-lg bg-bg-secondary/20 transition-all duration-300 hover:brightness-110"
+								>
+									<img
+										src={image.src}
+										alt={image.alt}
+										class="aspect-[4/3] w-full object-cover shadow-xl transition-transform duration-500 group-hover:scale-105"
+										loading="lazy"
+									/>
+									<div class="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/10" />
+								</a>
+							) : (
+								<div class="overflow-hidden rounded-lg bg-bg-secondary/20 shadow-xl">
+									<img
+										src={image.src}
+										alt={image.alt}
+										class="aspect-[4/3] w-full object-cover"
+										loading="lazy"
+									/>
+								</div>
+							)}
+							{image.caption && (
+								<figcaption class="mt-3 font-body text-sm italic text-text-secondary/80">
+									{image.caption}
+								</figcaption>
+							)}
+						</figure>
+					</div>
+				)
+			}
+		</div>
+	</div>
+</section>
+
+<script>
+	function initParallax() {
+		const parallaxElements = document.querySelectorAll<HTMLElement>(".parallax-bg");
+
+		if (!parallaxElements.length) return;
+
+		function updateParallax() {
+			const scrollY = window.scrollY;
+			const windowHeight = window.innerHeight;
+
+			parallaxElements.forEach((el) => {
+				const strength = parseFloat(el.dataset.parallaxStrength || "0.5");
+				const rect = el.parentElement?.getBoundingClientRect();
+
+				if (!rect) return;
+
+				// Only animate if in view (with some buffer)
+				if (rect.top < windowHeight && rect.bottom > 0) {
+					// Calculate relative scroll position
+					// 0 means element is at top of viewport
+					const relativeScroll = rect.top;
+					const translateY = relativeScroll * strength * 0.5;
+
+					el.style.transform = `translate3d(0, ${translateY}px, 0)`;
+				}
+			});
+
+			requestAnimationFrame(updateParallax);
+		}
+
+		// Start loop
+		requestAnimationFrame(updateParallax);
+	}
+
+	// Run on load
+	initParallax();
+
+	// Re-run on astro page swap
+	document.addEventListener("astro:page-load", initParallax);
+</script>

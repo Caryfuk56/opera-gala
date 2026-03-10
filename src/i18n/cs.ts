@@ -43,6 +43,7 @@ const cs = {
 			"Projekt vznikl pod vedením Roberta Huga, uznávaného odborníka na českou hudbu 17. století, který spojuje interpretační mistrovství s dlouholetou výzkumnou a rekonstrukční činností v oblasti staré hudby.",
 			"Opera Gala je určena posluchačům, kteří chtějí zažít klasickou hudbu nikoli jako reprodukci tradice, ale jako živou a autentickou událost.",
 		],
+		concertsProgram: "Program koncertů",
 	},
 	artistsPage: {
 		title: "Umělci a ansámbl",
@@ -105,6 +106,12 @@ const cs = {
 		loading: "Načítání galerie…",
 		error: "Galerii se nepodařilo načíst. Zkuste to prosím později.",
 		empty: "Galerie zatím neobsahuje žádné fotografie.",
+	},
+	inlineGallery: {
+		loading: "Načítání náhledu galerie…",
+		error: "Nepodařilo se načíst náhled galerie.",
+		empty: "Tato galerie neobsahuje žádné obrázky.",
+		more: "Zobrazit celou galerii",
 	},
 	partners: {
 		title: "Projekt je realizován za podpory",
