@@ -1,10 +1,16 @@
 ---
+import CtaButton from './CtaButton.astro';
+
 interface Props {
 	image: { src: string };
 	title: string;
 	subtitle?: string;
 	imagePosition?: string;
 	height?: string;
+	ctaPrimary?: {
+		label: string;
+		href: string;
+	};
 }
 
 const {
@@ -13,6 +19,7 @@ const {
 	subtitle,
 	imagePosition = "center 20%",
 	height = "h-[32vh] min-h-[260px] max-h-[420px]",
+	ctaPrimary,
 } = Astro.props;
 ---
 
@@ -41,6 +48,14 @@ const {
 				<p class="mt-4 max-w-2xl font-body text-sm leading-relaxed text-text-primary/90 sm:text-base">
 					{subtitle}
 				</p>
+			)}
+
+			{ctaPrimary && (
+				<div class="mt-8">
+					<CtaButton href={ctaPrimary.href} variant="primary">
+						{ctaPrimary.label}
+					</CtaButton>
+				</div>
 			)}
 		</div>
 	</div>

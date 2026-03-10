@@ -19,3 +19,44 @@
 		@apply font-heading tracking-tight;
 	}
 }
+
+@layer components {
+	.prose {
+		@apply font-body text-current;
+	}
+
+	.prose h2 {
+		@apply text-text-primary;
+	}
+
+	.prose p {
+		@apply pb-4;
+	}
+
+	.prose ul {
+		@apply space-y-2;
+	}
+
+	.prose li {
+		@apply pl-6 relative;
+	}
+
+	.prose li::before {
+		content: '';
+		@apply absolute left-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full border-2 border-accent;
+	}
+
+	.prose blockquote {
+		@apply text-lg italic text-text-primary not-italic;
+	}
+}
+
+@layer utilities {
+	.no-scrollbar::-webkit-scrollbar {
+		display: none;
+	}
+	.no-scrollbar {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
+}

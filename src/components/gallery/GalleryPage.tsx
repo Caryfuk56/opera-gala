@@ -67,17 +67,7 @@ const GallerySkeleton: FC = () => {
 	);
 };
 
-function buildCloudinaryUrl(params: {
-	cloudName: string;
-	publicId: string;
-	format: string;
-	width?: number;
-}) {
-	const { cloudName, publicId, format, width } = params;
-	const transform = width ? `f_auto,q_auto,w_${width}` : "f_auto,q_auto";
-	console.log("MIH url",`https://res.cloudinary.com/${cloudName}/image/upload/${transform}/${publicId}.${format}`);
-	return `https://res.cloudinary.com/${cloudName}/image/upload/${transform}/${publicId}.${format}`;
-}
+import { buildCloudinaryUrl } from "../../utils/cloudinary";
 
 const GalleryPage: FC<Props> = ({ title, emptyMessage, loadingMessage, errorMessage }) => {
 	const [data, setData] = useState<GalleryResponse | null>(null);

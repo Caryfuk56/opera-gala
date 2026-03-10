@@ -106,6 +106,12 @@ const en = {
 		error: "We couldn't load the gallery. Please try again later.",
 		empty: "The gallery does not contain any photos yet.",
 	},
+	inlineGallery: {
+		loading: "Loading gallery preview…",
+		error: "Failed to load gallery preview.",
+		empty: "This gallery contains no images.",
+		more: "View full gallery",
+	},
 	partners: {
 		title: "Supported by",
 	},
