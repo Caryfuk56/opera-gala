@@ -5,7 +5,7 @@ description: "Opera Gala je koncertní projekt Roberta Huga, který představuje
 
 Opera Gala je koncertní projekt Roberta Huga, který představuje klasickou hudbu v prostředí, pro které byla původně určena – v zámeckém barokním sále, kde hudba zní přirozeně, bez efektu moderního koncertního aparátu.
 
-Dramaturgie propojuje operní árie, symfonická díla i komorní skladby inspirované kulturními centry Prahy, Vídně a Valtic. Program vychází z tradice středoevropské hudby 17. a 18. století a nabízí posluchačům průřez tím nejkrásnějším z klasického repertoáru.
+Dramaturgie propojuje operní árie, symfonická díla i komorní skladby inspirované kulturními centry Prahy, Vídně a Valtic. Program vychází z tradice středoevropské hudby 17. a 19. století a nabízí posluchačům průřez tím nejkrásnějším z klasického repertoáru.
 
 Hudebníci hrají na dobové nástroje nebo jejich repliky a respektují původní aranžmá skladeb. Interpretace tak vychází z historicky poučené praxe, která se výrazně liší od moderní symfonické tradice – lehkostí, barevností i dynamikou zvuku.
 

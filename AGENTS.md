@@ -1,113 +1,158 @@
 # AGENTS.md – Astro Project Guidelines
 
-## 1. Project Context
+# 1. Project Context
 
 This project is a **static-first website built with Astro**.
+
 Primary goals:
 
-* clarity
-* performance
-* minimal JavaScript
-* clean, maintainable structure
+- clarity
+- performance
+- accessibility
+- maintainability
+- minimal JavaScript
 
 Astro is the **default rendering layer**.
+
 React is used **only when interactivity is required**.
 
 Tailwind CSS is used for styling.
 
 ---
 
-## 2. Core Principles (DO NOT BREAK)
+# 2. Architecture Overview
 
-* Prefer **Astro components over framework components**
-* Prefer **static rendering** over client-side JS
-* Use React **only for interactive islands**
-* Keep JavaScript minimal and intentional
-* Favor simple, readable solutions over clever abstractions
+The project follows a **static-first architecture**.
+
+Rendering priority:
+
+1. Static HTML (Astro)
+2. Progressive enhancement
+3. React islands when interaction is required
+
+Data flow:
+
+```
+Content Collections / Markdown
+            ↓
+      Astro Components
+            ↓
+        Astro Pages
+            ↓
+ Optional React Islands
+```
+
+Favor Astro's strengths instead of recreating SPA architecture.
 
 ---
 
-## 3. Theming & Tailwind Tokens (MUST FOLLOW)
-- Do not hardcode colors or fonts in Tailwind classes.
-- Always use the semantic theme tokens defined in `tailwind.config.*`:
-  - Backgrounds: `bg-bg-primary`, `bg-bg-secondary`
-  - Text: `text-text-primary`, `text-text-secondary`
-  - Accents: `bg-accent`, `text-accent`, `bg-accent-deep`
-- Fonts:
-  - Headings must use `font-heading`
-  - Body text must use `font-body`
-- If a new visual value is needed, extend the theme instead of inline values.
+# 3. Core Principles (DO NOT BREAK)
+
+- Prefer **Astro components** over framework components.
+- Prefer **static rendering** over client-side rendering.
+- Use React **only for interactive islands**.
+- Keep JavaScript minimal and intentional.
+- Favor readability over clever abstractions.
+- Prefer explicit code over implicit behavior.
 
 ---
 
-## 4. Component Strategy
+# 4. Theming & Tailwind Tokens (MUST FOLLOW)
 
-### Astro Components (default)
+Do not hardcode colors or fonts in Tailwind classes.
+
+Always use semantic theme tokens defined in the Tailwind configuration.
+
+Backgrounds:
+
+- `bg-bg-primary`
+- `bg-bg-secondary`
+
+Text:
+
+- `text-text-primary`
+- `text-text-secondary`
+
+Accents:
+
+- `bg-accent`
+- `text-accent`
+- `bg-accent-deep`
+
+Fonts:
+
+- Headings → `font-heading`
+- Body → `font-body`
+
+If a new visual value is required, extend the theme instead of using inline values.
+
+---
+
+# 5. Component Strategy
+
+## Astro Components (default)
 
 Use `.astro` components for:
 
-* layout
-* pages
-* static UI
-* content rendering
-* composition of sections
+- layouts
+- pages
+- static UI
+- content rendering
+- section composition
 
-Astro components:
+Astro components may:
 
-* may contain HTML + Tailwind
-* may import other Astro components
-* may import React components **only when needed**
+- contain HTML + Tailwind
+- import other Astro components
+- import React components only when necessary
 
 Do NOT:
 
-* simulate React patterns inside Astro
-* over-abstract layout into JS logic
+- simulate React patterns inside Astro
+- move presentation logic into JavaScript
+- over-abstract layouts
 
 ---
 
-### React Components (islands only)
+## React Components (interactive islands)
 
-Use React **only** when one of these is true:
+Use React only when one of the following is required:
 
-* user interaction (click, toggle, filter)
-* client-side state
-* dynamic behavior not possible with HTML/CSS
+- user interaction
+- client-side state
+- browser APIs
+- behavior impossible with HTML/CSS
 
 Rules:
 
-* React components must be **small and focused**
-* One responsibility per component
-* No layout logic inside React unless unavoidable
-* Use the appropriate Astro client directive:
+- components should be small
+- one responsibility per component
+- avoid layout responsibilities
+- keep business logic isolated
 
-  * `client:load`
-  * `client:idle`
-  * `client:visible`
+Hydration priority:
 
-Default to **`client:visible`** unless there is a reason not to.
+1. `client:visible`
+2. `client:idle`
+3. `client:load`
 
----
-
-## 5. Styling Rules (Tailwind)
-
-* Use Tailwind utility classes
-* Do not write custom CSS unless absolutely necessary
-* Avoid inline styles
-* Avoid deeply nested utility chains
-
-Guidelines:
-
-* Prefer composition over long class strings
-* Extract repeated patterns into components
-* Use consistent spacing and typography scales
-
-Dark mode is the **default design**.
+Use the lightest hydration strategy possible.
 
 ---
 
-## 6. File & Folder Structure
+# 6. Styling Rules
 
-Follow this structure strictly:
+- Prefer Tailwind utilities.
+- Avoid custom CSS unless necessary.
+- Avoid inline styles.
+- Keep utility chains readable.
+- Extract repeated patterns into reusable components.
+
+Dark mode is the default design.
+
+---
+
+# 7. File & Folder Structure
 
 ```
 src/
@@ -123,112 +168,239 @@ src/
 
 Rules:
 
-* `layouts/` → page shells
-* `components/sections/` → page-level sections
-* `components/ui/` → small reusable UI primitives
-* `pages/` → routing only, minimal logic
-* `content/` → markdown or content collections
+- layouts → page shells
+- sections → page-level content
+- ui → reusable primitives
+- pages → routing only
+- content → markdown and collections
 
 Do NOT:
 
-* mix layout logic into pages
-* put React components into `pages/`
+- place React components inside pages
+- mix layout logic into routing
+- duplicate reusable UI
 
 ---
 
-## 7. Content & Data
+# 8. Content Strategy
 
-* Prefer **Astro Content Collections** or markdown files
-* Avoid hardcoded content inside components
-* Keep content and presentation separated
+Content should remain separate from presentation.
 
-Data rules:
+Prefer:
 
-* Static data → markdown / JSON
-* No runtime fetching unless explicitly required
-* No unnecessary client-side data loading
+- Astro Content Collections
+- Markdown
+- JSON
+
+Avoid hardcoded content inside components.
+
+Static content belongs in content files, not UI components.
 
 ---
 
-## 8. Code Style & Quality
+# 9. Accessibility Rules
+
+Accessibility is mandatory.
+
+Prefer semantic HTML before ARIA.
+
+Every interactive element should:
+
+- support keyboard navigation
+- expose visible focus
+- include accessible labels where required
+- remain usable with screen readers
+
+---
+
+# 10. SEO Rules
+
+Every page should provide:
+
+- unique page title
+- meta description
+- canonical URL
+- Open Graph metadata
+- proper heading hierarchy
+
+Avoid duplicate metadata.
+
+---
+
+# 11. Performance Rules
+
+Performance is a primary goal.
+
+Prefer:
+
+- static rendering
+- CSS over JavaScript
+- minimal hydration
+- minimal client bundles
+
+Avoid unnecessary runtime behavior.
+
+---
+
+# 12. Naming Conventions
+
+Use consistent naming throughout the project.
+
+Components:
+
+- PascalCase
+
+Astro Components:
+
+- `ComponentName.astro`
+
+React Components:
+
+- `ComponentName.tsx`
+
+Helpers:
+
+- camelCase
+
+Hooks:
+
+- `useSomething.ts`
+
+Constants:
+
+- UPPER_SNAKE_CASE only when appropriate
+
+---
+
+# 13. Error Handling
+
+Never silently ignore errors.
+
+Prefer explicit failures over hidden fallbacks.
+
+If assumptions are violated:
+
+- fail clearly
+- surface useful information
+- avoid masking unexpected states
+
+---
+
+# 14. Code Style & Quality
 
 General rules:
 
-* Prefer explicit code over magic
-* Avoid premature abstraction
-* Keep components small
-* Avoid deep nesting
+- keep components focused
+- avoid deep nesting
+- avoid premature abstraction
+- prefer composition
+- optimize for readability
 
-React-specific:
+React:
 
-* Avoid inline anonymous functions in JSX
-* Extract logic into hooks/helpers
-* Avoid complex conditionals inside JSX
-* Prefer early returns
+- avoid complex JSX
+- prefer early returns
+- extract reusable logic into hooks or helpers
 
-Astro-specific:
+Astro:
 
-* Keep frontmatter minimal
-* Do not replicate React state patterns
-* Use Astro’s strengths, not workarounds
+- keep frontmatter minimal
+- avoid recreating React patterns
 
 ---
 
-## 9. Agent Execution Rules (IMPORTANT)
+# 15. Definition of Done
+
+A task is complete only if:
+
+- architecture remains consistent
+- no unnecessary JavaScript was introduced
+- accessibility is preserved
+- semantic HTML is used
+- Tailwind theme tokens are respected
+- duplicated code was not introduced
+- changes remain minimal and understandable
+
+---
+
+# 16. Agent Execution Rules
 
 When working as an AI agent:
 
-* Touch **only files explicitly mentioned**
-* Do not refactor unrelated code
-* Do not introduce new dependencies without approval
-* Do not “improve” architecture unless asked
-* Prefer minimal diffs
+- modify only requested files
+- avoid unrelated refactoring
+- avoid architectural changes unless requested
+- do not introduce dependencies without approval
+- prefer minimal diffs
 
-If unsure:
+If requirements are unclear:
 
-* Ask for clarification
-* Do NOT guess
+Ask before implementing.
 
----
+Never guess.
 
-## 10. What NOT to Do
+Specialized agent behavior is defined in:
 
-* Do not turn Astro into a React app
-* Do not add global JS without reason
-* Do not invent patterns not present in the codebase
-* Do not optimize prematurely
-* Do not over-engineer
+```
+.agents/agents/
+```
 
----
+Switch to agent mode according prompt keywords PLANNER, REVIEWER, CODER
 
-## 11. Success Criteria
+## PLANNER
+path: `.agents/agents/planner.md`
 
-A change is considered successful if:
+## CODER
+path: `.agents/agents/coder.md`
 
-* it is readable
-* it is minimal
-* it aligns with Astro’s philosophy
-* it does not introduce unnecessary JS
-* it can be understood by a human in one pass
+## REVIEWER
+path: `.agents/agents/rivewer.md`
 
 ---
 
-## 12 i18n Rules (MUST FOLLOW)
+# 17. What NOT to Do
+
+- Do not turn Astro into a React application.
+- Do not introduce unnecessary JavaScript.
+- Do not invent new architectural patterns.
+- Do not optimize prematurely.
+- Do not over-engineer.
+- Do not duplicate components or content.
+
+---
+
+# 18. Success Criteria
+
+A successful implementation is:
+
+- readable
+- minimal
+- maintainable
+- performant
+- accessible
+- aligned with Astro philosophy
+
+It should be understandable in a single pass.
+
+---
+
+# 19. i18n Rules (MUST FOLLOW)
 
 - Do not duplicate pages per language.
-- Use dynamic `[lang]` route parameters.
-- All text content must come from language dictionaries.
-- Do not use client-side state for language switching.
-- Language switching is handled via URL paths only.
+- Use dynamic `[lang]` routes.
+- Keep all text inside language dictionaries.
+- Do not use client-side language switching.
+- Language is determined by the URL.
 
 ---
 
-## Final Note
+# Final Note
 
 This project values:
 
-> **clarity over cleverness**
-> **intent over automation**
-> **design over framework tricks**
+> clarity over cleverness  
+> simplicity over abstraction  
+> intent over automation  
+> architecture over shortcuts
 
-AI is a tool, not the author.
+AI is a collaborator, not the architect.
