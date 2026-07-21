@@ -35,7 +35,7 @@ const cs = {
 	},
 	aboutPage: {
 		title: "O projektu Opera Gala",
-		lead: "Opera Gala je koncertní projekt Roberta Huga, který představuje klasickou hudbu v prostředí, pro které byla původně určena – v zámeckém barokním sále, kde hudba zní přirozeně, bez efektu moderního koncertního aparátu.",
+		lead: "Dlouholetý odborník v oboru opery 17. a 18. století v tomto projektu ukazuje, že barokní opera není jen pro odobrníky. Jinými slovy bychom mohli říci, že Opera Gala znamená \"barokní opera pro každého\". Zároveň ukazuje, že geniální W.A. Mozart měl řadu geniálních kolegů i konkurentů.",
 		paragraphs: [
 			"Dramaturgie propojuje operní árie, symfonická díla i komorní skladby inspirované kulturními centry Prahy, Vídně a Valtic. Program vychází z tradice středoevropské hudby 17. a 18. století a nabízí posluchačům průřez tím nejkrásnějším z klasického repertoáru.",
 			"Hudebníci hrají na dobové nástroje nebo jejich repliky a respektují původní aranžmá skladeb. Interpretace tak vychází z historicky poučené praxe, která se výrazně liší od moderní symfonické tradice – lehkostí, barevností i dynamikou zvuku.",
@@ -49,7 +49,7 @@ const cs = {
 		title: "Umělci a ansámbl",
 		lead: "Poznejte hudebníky, kteří tvoří Opera Gala — soubor s důrazem na stylovou interpretaci a autentický zvuk.",
 		paragraphs: [
-			"Komorní orchestr Valtického divadla, je nově vzniklý soubor složený ze špičkových hráčů předních českých symfonických orchestrů (např. České filharmonie a Symfonického orchestru hl. m. Prahy FOK) a ze specialistů na stylovou interpretaci historické hudby.",
+			"Komorní orchestr Valtického divadla je nově vzniklý soubor složený ze špičkových hráčů předních českých symfonických orchestrů (např. České filharmonie a Symfonického orchestru hl. m. Prahy FOK) a ze specialistů na stylovou interpretaci historické hudby.",
 			"Ansámbl respektuje interpretační specifika jednotlivých hudebních stylů a k jejich autentickému vyjádření využívá odpovídající historické nástroje.",
 			"Jako sólisté se představí Viktoria Englberth, Hartová a další. Uměleckým vedoucím souboru je Robert Hugo.",
 		],
@@ -62,12 +62,12 @@ const cs = {
 			{
 				name: "Viktoria Englberth",
 				role: "Sólová houslistka",
-				bio: "Sólistka věnující se historicky poučené interpretaci a živému hudebnímu vyprávění.",
+				bio: "Sólistka věnující se historicky poučené interpretaci a živému hudebnímu vyprávění. Absolovala Akademii můzických umění v Praze. Vystupuje na festivalech a exkluzivních akcích po celé Evropě — Belgie, Německo, Francie, Japonsko, Švýcarsko. Každé vystoupení spojuje preciznost klasického vzdělání s energií, která zvedne ze židle celý sál.",
 			},
 			{
 				name: "Eva Hartová",
-				role: "Zpěvačka",
-				bio: "Sólistka opery v Ústi nad Labem. Pěvkyně s vřelým hlasovým zabarvením a citlivou, textově vedenou interpretací.",
+				role: "Sólistka opery v Ústi nad Labem",
+				bio: "Studovala v Praze a Výmaru, spolupracovala s řadou evropských orchestrů (Nordwestdeutsche phylharmonie, Göttingenský symfonický orchestr). Spolupracuje se Státní operou Praha a s Jihočeským divadlev v Českých Budějovicích.",
 			},
 			{
 				name: "Marie Šimůnková",
