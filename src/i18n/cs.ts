@@ -27,8 +27,8 @@ const cs = {
 	about: {
 		title: "O projektu Opera Gala",
 		text: [
-			"Opera Gala přináší klasickou operní hudbu, kde zazní na zámeckém nádvoří pod širým nebem.",
-			"Tento projekt Roberta Huga propojuje operní vášeň, symfonickou hudbu a historicky poučenou interpretaci.",
+			"Hudba klasiické opery a operety zazní pod širým nebem na nádvoří valtického zámku.",
+			"Tento nový projekt Roberta Huga propojuje operní vášeň, symfonickou hudbu a historicky poučenou interpretaci.",
 			"Hrajeme klasickou hudbu tak, aby potěšila každého.",
 		],
 		cta: "Více o projektu",
@@ -47,20 +47,20 @@ const cs = {
 	},
 	artistsPage: {
 		title: "Umělci a ansámbl",
-		lead: "Poznejte hudebníky, kteří tvoří Opera Gala — soubor s důrazem na stylovou interpretaci a autentický zvuk v prostředí Valtic.",
+		lead: "Poznejte hudebníky, kteří tvoří Opera Gala — soubor s důrazem na stylovou interpretaci a autentický zvuk.",
 		paragraphs: [
-			"Komorní orchestr Valtického divadla, označovaný také jako Komorní orchestr Valtického barokního divadla, je nově vzniklý soubor složený ze špičkových hráčů předních českých symfonických orchestrů (např. České filharmonie a Symfonického orchestru hl. m. Prahy FOK) a ze specialistů na stylovou interpretaci historické hudby.",
+			"Komorní orchestr Valtického divadla, je nově vzniklý soubor složený ze špičkových hráčů předních českých symfonických orchestrů (např. České filharmonie a Symfonického orchestru hl. m. Prahy FOK) a ze specialistů na stylovou interpretaci historické hudby.",
 			"Ansámbl respektuje interpretační specifika jednotlivých hudebních stylů a k jejich autentickému vyjádření využívá odpovídající historické nástroje.",
-			"Jako sólisté se představují houslisté Viktor Mazáček, Lucie Hulová a Viktoria Engelbert, ze zpěváků pak například Veronika Vojířová, Eva Hartová a další. Uměleckým vedoucím souboru je Robert Hugo.",
+			"Jako sólisté se představí Viktoria Englberth, Hartová a další. Uměleckým vedoucím souboru je Robert Hugo.",
 		],
 		artists: [
 			{
 				name: "Robert Hugo",
 				role: "Umělecký vedoucí",
-				bio: "Dirigent a odborník na českou hudbu 17. století, který propojuje interpretační mistrovství s dlouholetou výzkumnou a rekonstrukční činností v oblasti staré hudby.",
+				bio: "Dirigent a odborník na českou hudbu baroka a klasicismu, který propojuje interpretační mistrovství s dlouholetou výzkumnou a rekonstrukční činností v oblasti staré hudby. Realizoval řadu inscenací oper 17. a 18. století z prostředí Prahy, Vídně, Paříže a dalších.",
 			},
 			{
-				name: "Viktoria Engelbert",
+				name: "Viktoria Englberth",
 				role: "Sólová houslistka",
 				bio: "Sólistka věnující se historicky poučené interpretaci a živému hudebnímu vyprávění.",
 			},
@@ -71,28 +71,18 @@ const cs = {
 			},
 			{
 				name: "Marie Šimůnková",
-				role: "Zpěvačka",
-				bio: "Sólistka opery Národního Divadla.",
+				role: "Sólistak Národního divadla Praha",
+				bio: "Studovala v Praze a Miláně. Přes svoje mládí již stvárnila řadu operních i operetních rolí. Kromě Národního divadla aktuálně působí také v divadle J. K. Tyla v Plzni a v Jihočeském divadle v Českých Budějovicích.",
 			},
 			{
 				name: "Jakub Verner",
-				role: "Zpěvák",
-				bio: "Koncertní mistr valtického komorního orchestru Valtického divadla."
+				role: "Koncertní mistr Valtického komorního orchestru",
+				bio: "Jakub Verner je vyhledávaným specialistou v oboru historické interpretace, je členem řady renomovaných souborů. Například Collum Regium 1704, Rejcha quartet a dalších."
 			},
 			{
 				name: "Adam Born",
-				role: "Zpěvák",
-				bio: "Národní divadlo Praha. Jeho vřelý hlasový projev jej předurčuje pro interpretaci barokní hudby a jeho scénická zkušenost mu umožňuje uplatňovat se jako úspěšný režisér inscenací barokní opery. Zde ze jména uplatňuje zkušenosti získané prací v barokním divadle v Českém Krumlově."
-			},
-			{
-				name: "Lucie Hulová",
-				role: "Houslová sólistka",
-				bio: "Houslistka s citlivým frázováním a smyslem pro detail v operním i komorním repertoáru.",
-			},
-			{
-				name: "Veronika Vojířová",
-				role: "Zpěvačka",
-				bio: "Sólová pěvkyně s důrazem na srozumitelnost textu, výraz a stylovou práci s barokní frází.",
+				role: "Národní divadlo Praha",
+				bio: "Jeho vřelý hlasový projev jej předurčuje pro interpretaci barokní hudby a jeho scénická zkušenost mu umožňuje uplatňovat se jako úspěšný režisér inscenací barokní opery. Zde ze jména uplatňuje zkušenosti získané prací v barokním divadle v Českém Krumlově."
 			},
 	
 		],
