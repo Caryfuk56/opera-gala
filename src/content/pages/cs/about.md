@@ -1,15 +1,15 @@
 ---
 title: "O projektu Opera Gala"
-description: "Opera Gala je koncertní projekt Roberta Huga, který představuje klasickou hudbu v prostředí, pro které byla původně určena."
+description: "Dlouholetý odborník v oboru opery 17. a 18. století v tomto projektu ukazuje, že barokní opera není jen pro znalce."
 sections:
   - title: "Dramaturgie"
     variant: "image-right"
     background: "light"
     image: "../../../assets/o_projektu.png"
     imageAlt: "O projektu Opera Gala"
-    imageCaption: "Test"
+    imageCaption: ""
     content: |
-      Dramaturgie propojuje operní árie, symfonická díla i komorní skladby inspirované kulturními centry Prahy, Vídně a Valtic. Program vychází z tradice středoevropské hudby 17. a 18. století a nabízí posluchačům průřez tím nejkrásnějším z klasického repertoáru.
+      Dramaturgie propojuje operní árie, symfonická díla i komorní skladby inspirované kulturními centry Prahy, Vídně a Valtic. Program vychází z tradice středoevropské hudby 17. a 18. století a nabízí posluchačům průřez tím nejkrásnějším z klasického repertoáru. Jinými slovy bychom mohli říci, že Opera Gala znamená \"barokní opera pro každého\". Zároveň ukazuje, že geniální W.A. Mozart měl řadu geniálních kolegů i konkurentů.
 
       - Tento výjimečný koncertní program nabídne posluchačům průřez tím nejkrásnějším z klasické hudby v podání *Orchestru valtického divadla*.
       - Program je sestaven ze slavných *operních, symfonických a komorních děl* světových skladatelů. Zazní například výběr z legendárních *Čtvera ročních dob*, symfonická tvorba *Ludwiga van Beethovena* a *Wolfganga Amadea Mozarta*, stejně jako proslulé *operní árie* – mimo jiné slavná *árie Královny noci* z **Mozartovy Kouzelné flétny**.
