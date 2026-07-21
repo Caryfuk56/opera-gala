@@ -13,8 +13,8 @@ const cs = {
 	},
 	hero: {
 		title: "Opera Gala",
-		subtitle: "Nezapomenutelný večer s barokní hudbou",
-		location: "Orchestr valtického divadla · Valtice",
+		subtitle: "Nezapomenutelný večer nejen s barokní operou",
+		location: "Komorní orchestr valtického divadla · Sólisté · Robert Hugo",
 		ctaPrimary: "Nejbližší koncert",
 		ctaSecondary: "Celý program",
 	},
@@ -27,9 +27,9 @@ const cs = {
 	about: {
 		title: "O projektu Opera Gala",
 		text: [
-			"Opera Gala přináší klasickou hudbu do prostředí barokního zámku, kde zaznívá na dobové nástroje a v původních aranžmá.",
-			"Projekt Roberta Huga propojuje operní vášeň, symfonickou monumentalitu a historicky poučenou interpretaci v autentickém slavnostním prostoru.",
-			"Zažijte klasickou hudbu tak, jak měla znít.",
+			"Opera Gala přináší klasickou operní hudbu, kde zazní na zámeckém nádvoří pod širým nebem.",
+			"Tento projekt Roberta Huga propojuje operní vášeň, symfonickou hudbu a historicky poučenou interpretaci.",
+			"Hrajeme klasickou hudbu tak, aby potěšila každého.",
 		],
 		cta: "Více o projektu",
 	},
@@ -104,7 +104,7 @@ const cs = {
 	},
 	venue: {
 		title: "Valtice – místo setkání hudby a historie",
-		text: "Zámek Valtice, zapsaný na seznamu UNESCO, poskytuje koncertům Opera Gala jedinečnou kulisu. Barokní architektura a akustika zámeckých sálů dodávají každému vystoupení nezaměnitelnou atmosféru.",
+		text: "Zámek Valtice, zapsaný na seznamu UNESCO, poskytuje koncertům Opera Gala jedinečnou kulisu. Barokní architektura a akustika zámeckých nádvoří dodávají každému vystoupení nezaměnitelnou atmosféru.",
 		cta: "Praktické informace",
 	},
 	gallery: {
