@@ -16,17 +16,29 @@ interface Props {
 	role: string;
 	bio: string;
 	imageSrc?: string;
+	imagePositionY?: string | number;
 	links?: SocialLinks;
 }
 
-const { name, role, bio, imageSrc, links } = Astro.props;
+const { name, role, bio, imageSrc, imagePositionY = "center", links } = Astro.props;
 const hasLinks = Boolean(links?.website || links?.facebook || links?.instagram || links?.youtube);
+const normalizedImagePositionY = String(imagePositionY);
+const imagePositionYValue = /^\d+(\.\d+)?$/.test(normalizedImagePositionY)
+	? `${normalizedImagePositionY}%`
+	: normalizedImagePositionY;
 ---
 
-<article class="group overflow-hidden rounded-lg border border-text-secondary/15 bg-bg-secondary/30 shadow-sm transition-colors">
-	<div class="aspect-[4/3] w-full bg-bg-secondary/40">
+<article class="group flex h-full flex-col overflow-hidden rounded-lg border border-text-secondary/15 bg-bg-secondary/30 shadow-sm transition-colors">
+	<div class="relative aspect-[4/3] w-full shrink-0 overflow-hidden bg-bg-secondary/40">
 		{imageSrc ? (
-			<img src={imageSrc} alt={name} class="h-full w-full object-cover" loading="lazy" decoding="async" />
+			<img
+				src={imageSrc}
+				alt={name}
+				class="absolute inset-0 h-full w-full object-cover"
+				style={`object-position: center ${imagePositionYValue};`}
+				loading="lazy"
+				decoding="async"
+			/>
 		) : (
 			<div class="flex h-full w-full items-center justify-center">
 				<div class="h-12 w-12 rounded-full bg-bg-secondary/60"></div>
@@ -34,13 +46,15 @@ const hasLinks = Boolean(links?.website || links?.facebook || links?.instagram |
 		)}
 	</div>
 
-	<div class="p-5">
-		<h3 class="font-heading text-lg font-semibold text-text-primary">{name}</h3>
-		<p class="mt-1 font-body text-sm text-text-secondary">{role}</p>
-		<p class="mt-4 font-body text-sm leading-relaxed text-text-secondary">{bio}</p>
+	<div class="flex flex-1 flex-col p-5">
+		<div>
+			<h3 class="font-heading text-lg font-semibold text-text-primary">{name}</h3>
+			<p class="mt-1 font-body text-sm text-text-secondary">{role}</p>
+			<p class="mt-4 font-body text-sm leading-relaxed text-text-secondary">{bio}</p>
+		</div>
 
 		{hasLinks && (
-			<div class="mt-5 flex flex-wrap gap-3">
+			<div class="mt-auto flex flex-wrap gap-3 pt-5">
 				{links?.website && (
 					<a
 						href={links.website}

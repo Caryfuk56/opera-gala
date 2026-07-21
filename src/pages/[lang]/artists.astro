@@ -4,8 +4,11 @@ import Layout from "../../layouts/Layout.astro";
 import PageHeader from "../../components/ui/PageHeader.astro";
 import ArtistMedallion from "../../components/ui/ArtistMedallion.astro";
 import artistsHeroImage from "../../assets/barokni_zkouska.png";
-import robertHugoImage from "../../assets/varhany.png";
-import ensembleImage from "../../assets/hero_image.png";
+import robertHugoImage from "../../assets/robert-hugo_03.webp";
+import ensembleImage from "../../assets/artist_placeholder.png";
+import engberthImage from "../../assets/englberth.webp";
+import hartovaImage from "../../assets/hartova.jpg";
+import bornImage from "../../assets/adam_born.webp";
 
 export const getStaticPaths = getStaticLangPaths;
 
@@ -13,6 +16,7 @@ type TArtistMedia = Record<
 	string,
 		{
 			imageSrc?: string;
+			imagePositionY?: string | number;
 			links?: {
 				website?: string;
 				facebook?: string;
@@ -28,12 +32,46 @@ const { t } = getI18n(lang);
 const artistMedia: TArtistMedia = {
 	"Robert Hugo": {
 		imageSrc: robertHugoImage.src,
+		links: {
+			website: "https://www.roberthugo.com/",
+		}
 	},
+	"Viktoria Engelbert": {
+		imageSrc: engberthImage.src,
+		imagePositionY: 30,
+		links: {
+			website: "https://vikiviolin.com/",
+			instagram: "https://www.instagram.com/viktoria.violin",
+		}
+	},
+	"Eva Hartová": {
+		imageSrc: hartovaImage.src,
+		links: {
+			website: "https://www.hartova.com/",
+
+		}
+	},
+	"Marie Šimůnková": {
+		links: {
+			website: "https://mariesimunkova.cz/",
+			facebook: "https://www.facebook.com/maruska.simunkova",
+			instagram: "https://www.instagram.com/marie_simunkova_soprano/",
+		}
+	},
+	"Adam Born": {
+		imageSrc: bornImage.src,
+		imagePositionY: 0,
+		links: {
+			website: "https://www.adamborn.cz/",
+
+		}
+	}
 };
 
 const artists = t.artistsPage.artists.map((artist) => ({
 	...artist,
 	imageSrc: artistMedia[artist.name]?.imageSrc ?? ensembleImage.src,
+	imagePositionY: artistMedia[artist.name]?.imagePositionY,
 	links: artistMedia[artist.name]?.links,
 }));
 ---
@@ -58,6 +96,7 @@ const artists = t.artistsPage.artists.map((artist) => ({
 						role={artist.role}
 						bio={artist.bio}
 						imageSrc={artist.imageSrc}
+						imagePositionY={artist.imagePositionY}
 						links={artist.links}
 					/>
 				))}

@@ -60,9 +60,29 @@ const cs = {
 				bio: "Dirigent a odborník na českou hudbu 17. století, který propojuje interpretační mistrovství s dlouholetou výzkumnou a rekonstrukční činností v oblasti staré hudby.",
 			},
 			{
-				name: "Viktor Mazáček",
-				role: "Houslový sólista",
-				bio: "Houslista se zaměřením na výraznou artikulaci a stylovou interpretaci barokního repertoáru.",
+				name: "Viktoria Engelbert",
+				role: "Sólová houslistka",
+				bio: "Sólistka věnující se historicky poučené interpretaci a živému hudebnímu vyprávění.",
+			},
+			{
+				name: "Eva Hartová",
+				role: "Zpěvačka",
+				bio: "Sólistka opery v Ústi nad Labem. Pěvkyně s vřelým hlasovým zabarvením a citlivou, textově vedenou interpretací.",
+			},
+			{
+				name: "Marie Šimůnková",
+				role: "Zpěvačka",
+				bio: "Sólistka opery Národního Divadla.",
+			},
+			{
+				name: "Jakub Verner",
+				role: "Zpěvák",
+				bio: "Koncertní mistr valtického komorního orchestru Valtického divadla."
+			},
+			{
+				name: "Adam Born",
+				role: "Zpěvák",
+				bio: "Národní divadlo Praha. Jeho vřelý hlasový projev jej předurčuje pro interpretaci barokní hudby a jeho scénická zkušenost mu umožňuje uplatňovat se jako úspěšný režisér inscenací barokní opery. Zde ze jména uplatňuje zkušenosti získané prací v barokním divadle v Českém Krumlově."
 			},
 			{
 				name: "Lucie Hulová",
@@ -70,20 +90,11 @@ const cs = {
 				bio: "Houslistka s citlivým frázováním a smyslem pro detail v operním i komorním repertoáru.",
 			},
 			{
-				name: "Viktoria Engelbert",
-				role: "Houslová sólistka",
-				bio: "Sólistka věnující se historicky poučené interpretaci a živému hudebnímu vyprávění.",
-			},
-			{
 				name: "Veronika Vojířová",
 				role: "Zpěvačka",
 				bio: "Sólová pěvkyně s důrazem na srozumitelnost textu, výraz a stylovou práci s barokní frází.",
 			},
-			{
-				name: "Eva Hartová",
-				role: "Zpěvačka",
-				bio: "Pěvkyně s vřelým hlasovým zabarvením a citlivou, textově vedenou interpretací.",
-			},
+	
 		],
 	},
 	ensemble: {
