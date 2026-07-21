@@ -1,13 +1,13 @@
 ---
 title: "O projektu Opera Gala"
-description: "Dlouholetý odborník v oboru opery 17. a 18. století v tomto projektu ukazuje, že barokní opera není jen pro znalce."
+description: "Dlouholetý odborník v oboru opery 17. a 18. století Robert Hugo v tomto projektu ukazuje, že barokní opera není jen pro znalce."
 sections:
   - title: "Dramaturgie"
     variant: "image-right"
     background: "light"
     image: "../../../assets/o_projektu.png"
     imageAlt: "O projektu Opera Gala"
-    imageCaption: ""
+    imageCaption: "Valtické barokní divadlo"
     content: |
       Dramaturgie propojuje operní árie, symfonická díla i komorní skladby inspirované kulturními centry Prahy, Vídně a Valtic. Program vychází z tradice středoevropské hudby 17. a 18. století a nabízí posluchačům průřez tím nejkrásnějším z klasického repertoáru. Jinými slovy bychom mohli říci, že Opera Gala znamená \"barokní opera pro každého\". Zároveň ukazuje, že geniální W.A. Mozart měl řadu geniálních kolegů i konkurentů.
 
@@ -17,6 +17,7 @@ sections:
     variant: "image-left"
     background: "dark"
     image: "../../../assets/robert-hugo.jpg"
+    imageCaption: "Robert Hugo"
     imageAlt: "Barokní zkouška"
     content: |
       Hudebníci hrají na dobové nástroje nebo jejich repliky a respektují původní aranžmá skladeb. Interpretace tak vychází z historicky poučené praxe, která se výrazně liší od moderní symfonické tradice – lehkostí, barevností i dynamikou zvuku.
