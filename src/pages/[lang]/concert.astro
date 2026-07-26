@@ -16,6 +16,13 @@ let events: CalendarEvent[] = [];
 let loadError: string | null = null;
 
 if (!apiKey || !calendarId) {
+	if (import.meta.env.DEV) {
+		const missing = [
+			!apiKey && "GOOGLE_CALENDAR_API",
+			!calendarId && "GOOGLE_CALENDAR_ID",
+		].filter(Boolean).join(", ");
+		console.warn(`Google Calendar events were not loaded. Missing environment variables: ${missing}`);
+	}
 	loadError = t.concerts.error;
 } else {
 	try {

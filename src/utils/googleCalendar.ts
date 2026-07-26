@@ -1,6 +1,8 @@
 
 import sanitizeHtml from 'sanitize-html';
 
+const CALENDAR_TIME_ZONE = "Europe/Prague";
+
 export interface CalendarEvent {
   id: string;
   summary: string;
@@ -95,15 +97,15 @@ export function formatDate(
   const date = new Date(isoDate);
   const locale = lang === "en" ? "en-US" : "cs-CZ";
 
-  const day = date.getDate().toString();
-  const month = date.toLocaleDateString(locale, { month: "long" });
-  const year = date.toLocaleDateString(locale, { year: "numeric" });
-  const weekday = date.toLocaleDateString(locale, { weekday: "long" });
+  const day = date.toLocaleDateString(locale, { day: "numeric", timeZone: CALENDAR_TIME_ZONE });
+  const month = date.toLocaleDateString(locale, { month: "long", timeZone: CALENDAR_TIME_ZONE });
+  const year = date.toLocaleDateString(locale, { year: "numeric", timeZone: CALENDAR_TIME_ZONE });
+  const weekday = date.toLocaleDateString(locale, { weekday: "long", timeZone: CALENDAR_TIME_ZONE });
   
   // Extract time if it's a dateTime (has 'T')
   const hasTime = isoDate.includes("T");
   const time = hasTime 
-    ? date.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })
+    ? date.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit", timeZone: CALENDAR_TIME_ZONE })
     : undefined;
 
   const full = date.toLocaleDateString(locale, {
@@ -113,6 +115,7 @@ export function formatDate(
     year: "numeric",
     hour: hasTime ? "2-digit" : undefined,
     minute: hasTime ? "2-digit" : undefined,
+    timeZone: CALENDAR_TIME_ZONE,
   });
 
   return {
