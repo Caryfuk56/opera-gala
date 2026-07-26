@@ -7,9 +7,24 @@ interface Props {
 	lang: string;
 	title?: string;
 	description?: string;
+	canonical?: string;
+	ogTitle?: string;
+	ogDescription?: string;
+	ogImage?: string;
 }
 
-const { lang, title = "Opera Gala Valtice", description } = Astro.props;
+const {
+	lang,
+	title = "Opera Gala Valtice",
+	description,
+	canonical,
+	ogTitle,
+	ogDescription,
+	ogImage,
+} = Astro.props;
+const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.url.origin).toString();
+const socialTitle = ogTitle ?? title;
+const socialDescription = ogDescription ?? description;
 ---
 
 <!doctype html>
@@ -18,6 +33,12 @@ const { lang, title = "Opera Gala Valtice", description } = Astro.props;
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		{description && <meta name="description" content={description} />}
+		<link rel="canonical" href={canonicalUrl} />
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content={socialTitle} />
+		<meta property="og:url" content={canonicalUrl} />
+		{socialDescription && <meta property="og:description" content={socialDescription} />}
+		{ogImage && <meta property="og:image" content={ogImage} />}
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />

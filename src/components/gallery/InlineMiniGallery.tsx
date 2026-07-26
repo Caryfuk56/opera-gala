@@ -3,25 +3,21 @@ import type { FC } from "react";
 import GalleryOverlay from "./GalleryOverlay";
 import ErrorDisplay from "../ui/ErrorDisplay";
 import { buildCloudinaryUrl } from "../../utils/cloudinary";
-
-interface GalleryImage {
-	src: string;
-	fullSrc?: string;
-	alt: string;
-	title: string;
-}
+import type { GalleryImage, GalleryLabels, GalleryResponse } from "../../types/gallery";
 
 interface InlineMiniGalleryProps {
 	tag: string;
 	limit?: number;
 	className?: string;
 	title?: string;
+	galleryHref: string;
 	messages: {
 		loading: string;
 		error: string;
 		empty: string;
 		more: string;
 	};
+	labels: GalleryLabels;
 }
 
 const LoadingSpinner: FC<{ className?: string }> = ({ className }) => {
@@ -38,7 +34,9 @@ const InlineMiniGallery: FC<InlineMiniGalleryProps> = ({
 	limit = 10,
 	className = "",
 	title,
+	galleryHref,
 	messages,
+	labels,
 }) => {
 	const [images, setImages] = useState<GalleryImage[]>([]);
 	const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
@@ -61,7 +59,7 @@ const InlineMiniGallery: FC<InlineMiniGalleryProps> = ({
 				
 				const targetSlug = tag.replace("concert:", "");
 				
-				const data = await res.json();
+				const data = (await res.json()) as GalleryResponse;
 				const resources = data[targetSlug] || [];
 				
 				if (!isActive) return;
@@ -69,7 +67,7 @@ const InlineMiniGallery: FC<InlineMiniGalleryProps> = ({
 				const cloudName = import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME;
 				if (!cloudName) throw new Error("Missing Cloudinary Cloud Name");
 
-				const mappedImages = resources.map((res: any) => ({
+				const mappedImages = resources.map((res) => ({
 					src: buildCloudinaryUrl({
 						cloudName,
 						publicId: res.public_id,
@@ -81,8 +79,8 @@ const InlineMiniGallery: FC<InlineMiniGalleryProps> = ({
 						publicId: res.public_id,
 						format: res.format
 					}),
-					alt: "",
-					title: "",
+					alt: title || targetSlug,
+					title: title || targetSlug,
 				}));
 
 				setImages(mappedImages);
@@ -97,7 +95,7 @@ const InlineMiniGallery: FC<InlineMiniGalleryProps> = ({
 		return () => {
 			isActive = false;
 		};
-	}, [tag]);
+	}, [tag, title]);
 
 	// Check scroll state
 	const checkScroll = () => {
@@ -193,7 +191,7 @@ const InlineMiniGallery: FC<InlineMiniGalleryProps> = ({
 								? "bg-accent text-bg-primary shadow-md hover:bg-accent/90 hover:scale-110 cursor-pointer"
 								: "bg-bg-secondary/30 text-text-secondary/30 cursor-default"
 						}`}
-						aria-label="Posunout vlevo"
+						aria-label={labels.scrollLeft}
 					>
 						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
 							<polyline points="15 18 9 12 15 6" />
@@ -239,7 +237,7 @@ const InlineMiniGallery: FC<InlineMiniGalleryProps> = ({
 								style={{ scrollSnapAlign: "start" }}
 							>
 								<a
-									href="/gallery"
+									href={galleryHref}
 									className="group flex flex-col items-center gap-2 text-text-secondary transition-colors hover:text-text-primary"
 								>
 									<span className="font-heading text-lg font-medium">{messages.more}</span>
@@ -266,7 +264,7 @@ const InlineMiniGallery: FC<InlineMiniGalleryProps> = ({
 								? "bg-accent text-bg-primary shadow-md hover:bg-accent/90 hover:scale-110 cursor-pointer"
 								: "bg-bg-secondary/30 text-text-secondary/30 cursor-default"
 						}`}
-						aria-label="Posunout vpravo"
+						aria-label={labels.scrollRight}
 					>
 						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
 							<polyline points="9 18 15 12 9 6" />
@@ -280,9 +278,10 @@ const InlineMiniGallery: FC<InlineMiniGalleryProps> = ({
 				onClose={() => setIsOpen(false)}
 				images={images}
 				initialIndex={clickedIndex}
-				galleryHref="/gallery"
+				galleryHref={galleryHref}
 				ctaLabel={messages.more}
 				showCtaSlide={true}
+				labels={labels}
 			/>
 		</>
 	);

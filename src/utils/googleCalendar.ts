@@ -1,7 +1,17 @@
 
-import sanitizeHtml from 'sanitize-html';
+import sanitizeHtml from "sanitize-html";
 
 const CALENDAR_TIME_ZONE = "Europe/Prague";
+
+export class CalendarApiError extends Error {
+  status?: number;
+
+  constructor(message: string, status?: number) {
+    super(message);
+    this.name = "CalendarApiError";
+    this.status = status;
+  }
+}
 
 export interface CalendarEvent {
   id: string;
@@ -35,17 +45,15 @@ export async function fetchUpcomingEvents({
     calendarId
   )}/events?key=${apiKey}&timeMin=${now}&singleEvents=true&orderBy=startTime&maxResults=${maxResults}`;
 
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch events: ${response.statusText}`);
-    }
-    const data = await response.json();
-    return data.items || [];
-  } catch (error) {
-    console.error("Error fetching calendar events:", error);
-    return [];
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new CalendarApiError(
+      `Failed to fetch events: ${response.statusText}`,
+      response.status,
+    );
   }
+  const data = await response.json();
+  return data.items || [];
 }
 
 export interface FetchEventByIdOptions {
@@ -63,17 +71,15 @@ export async function fetchEventById({
     calendarId
   )}/events/${encodeURIComponent(id)}?key=${apiKey}`;
 
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      if (response.status === 404) return null;
-      throw new Error(`Failed to fetch event: ${response.statusText}`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error(`Error fetching calendar event ${id}:`, error);
-    return null;
+  const response = await fetch(url);
+  if (!response.ok) {
+    if (response.status === 404) return null;
+    throw new CalendarApiError(
+      `Failed to fetch event: ${response.statusText}`,
+      response.status,
+    );
   }
+  return await response.json();
 }
 
 export function getEventIsoDate(event: CalendarEvent): string | null {
@@ -92,7 +98,7 @@ export interface FormattedDate {
 export function formatDate(
   isoDate: string,
   lang: string = "cs",
-  variant: "short" | "full" = "short"
+  _variant: "short" | "full" = "short"
 ): FormattedDate {
   const date = new Date(isoDate);
   const locale = lang === "en" ? "en-US" : "cs-CZ";
@@ -102,7 +108,7 @@ export function formatDate(
   const year = date.toLocaleDateString(locale, { year: "numeric", timeZone: CALENDAR_TIME_ZONE });
   const weekday = date.toLocaleDateString(locale, { weekday: "long", timeZone: CALENDAR_TIME_ZONE });
   
-  // Extract time if it's a dateTime (has 'T')
+  // Extract time if it is a dateTime value.
   const hasTime = isoDate.includes("T");
   const time = hasTime 
     ? date.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit", timeZone: CALENDAR_TIME_ZONE })
@@ -139,21 +145,20 @@ export function parseEventDescription(description?: string): {
 
   // Pre-process description to handle HTML from Google Calendar
   const cleanText = description
-    .replace(/<br\s*\/?>/gi, '\n') // Replace <br> with newlines
-    .replace(/<\/p>/gi, '\n')      // Replace </p> with newlines
-    .replace(/<[^>]+>/g, '');      // Strip remaining tags
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/p>/gi, "\n")
+    .replace(/<[^>]+>/g, "");
 
   // Decode HTML entities (basic ones)
   const decodedText = cleanText
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"');
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, "\"");
 
   const lines = decodedText.split("\n");
   let ticket: string | undefined;
-  let program: string | undefined;
   const subtitleParts: string[] = [];
   const programLines: string[] = [];
   let isProgramSection = false;
@@ -169,7 +174,7 @@ export function parseEventDescription(description?: string): {
       }
     } else if (lower.startsWith("program:") || lower === "program") {
       isProgramSection = true;
-    } else if (isProgramSection) {
+    } else if (isProgramSection && trimmed) {
       programLines.push(trimmed);
     } else if (trimmed) {
       subtitleParts.push(trimmed);
@@ -185,9 +190,9 @@ export function parseEventDescription(description?: string): {
 
 export function sanitizeProgramHtml(html: string): string {
   return sanitizeHtml(html, {
-    allowedTags: ['b', 'i', 'em', 'strong', 'a', 'p', 'br', 'ul', 'li'],
+    allowedTags: ["b", "i", "em", "strong", "a", "p", "br", "ul", "li"],
     allowedAttributes: {
-      'a': ['href']
+      "a": ["href"]
     }
   });
 }

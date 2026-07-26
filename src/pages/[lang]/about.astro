@@ -91,12 +91,14 @@ const processedSections = await Promise.all(
 								tag="concert:2026-02-12-příprava"
 								limit={10}
 								title={t.gallery.title}
+								galleryHref={getPath(lang, "gallery")}
 								messages={{
 									loading: t.inlineGallery.loading,
 									error: t.inlineGallery.error,
 									empty: t.inlineGallery.empty,
 									more: t.inlineGallery.more,
 								}}
+								labels={t.a11y.gallery}
 							/>
 						</div>
 					</section>

@@ -1,16 +1,17 @@
 import astro from "eslint-plugin-astro";
 import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
+import tsParser from "@typescript-eslint/parser";
 
 export default [
 	{
-		ignores: ["dist/**", "node_modules/**"],
+		ignores: ["dist/**", "node_modules/**", ".astro/**", ".netlify/**"],
 	},
 
 	...astro.configs.recommended,
 
 	{
-		files: ["**/*.{js,jsx,ts,tsx,astro}"],
+		files: ["**/*.{js,jsx,ts,tsx}"],
 		languageOptions: {
 			ecmaVersion: "latest",
 			sourceType: "module",
@@ -22,10 +23,19 @@ export default [
 	},
 
 	{
+		files: ["**/*.{ts,tsx}"],
+		languageOptions: {
+			parser: tsParser,
+			ecmaVersion: "latest",
+			sourceType: "module",
+		},
+	},
+
+	{
 		files: ["**/*.{jsx,tsx}"],
 		plugins: {
 			react,
-			reactHooks,
+			"react-hooks": reactHooks,
 		},
 		settings: {
 			react: {
@@ -35,6 +45,8 @@ export default [
 		rules: {
 			...(react.configs?.recommended?.rules ?? {}),
 			...(reactHooks.configs?.recommended?.rules ?? {}),
+			"react/react-in-jsx-scope": "off",
+			"react-hooks/set-state-in-effect": "off",
 		},
 	},
 ];

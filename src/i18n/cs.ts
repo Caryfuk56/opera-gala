@@ -117,6 +117,39 @@ const cs = {
 	partners: {
 		title: "Projekt je realizován za podpory",
 	},
+	meta: {
+		home: {
+			description: "Slavnostní koncerty Opera Gala v jedinečném prostředí zámku Valtice.",
+		},
+		concert: {
+			description: "Aktuální program a vstupenky na koncerty Opera Gala ve Valticích.",
+		},
+		artists: {
+			description: "Poznejte umělce a ansámbl, kteří tvoří koncerty Opera Gala.",
+		},
+		gallery: {
+			description: "Fotografie a atmosféra koncertů Opera Gala.",
+		},
+		contact: {
+			description: "Kontakt na pořadatele projektu Opera Gala Valtice.",
+		},
+	},
+	a11y: {
+		header: {
+			openMenu: "Otevřít menu",
+			closeMenu: "Zavřít menu",
+			mainNavigation: "Hlavní navigace",
+			mobileNavigation: "Mobilní navigace",
+		},
+		gallery: {
+			dialog: "Galerie",
+			close: "Zavřít galerii",
+			previous: "Předchozí obrázek",
+			next: "Další obrázek",
+			scrollLeft: "Posunout vlevo",
+			scrollRight: "Posunout vpravo",
+		},
+	},
 	footer: {
 		description: "Slavnostní operní gala večer v jedinečném prostředí zámku Valtice.",
 		navigation: "Navigace",

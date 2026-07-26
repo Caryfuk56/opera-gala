@@ -1,19 +1,14 @@
 import { useState } from "react";
 import type { FC } from "react";
 import GalleryOverlay from "./GalleryOverlay";
-
-interface GalleryImage {
-	src: string;
-	fullSrc?: string;
-	alt: string;
-	title: string;
-}
+import type { GalleryImage, GalleryLabels } from "../../types/gallery";
 
 interface GalleryModalProps {
 	images: GalleryImage[];
 	galleryHref?: string;
 	ctaLabel?: string;
 	showCtaSlide?: boolean;
+	labels: GalleryLabels;
 }
 
 const LoadingSpinner: FC<{ className?: string }> = ({ className }) => {
@@ -25,7 +20,7 @@ const LoadingSpinner: FC<{ className?: string }> = ({ className }) => {
 	);
 };
 
-const GalleryModal: FC<GalleryModalProps> = ({ images, galleryHref, ctaLabel, showCtaSlide = true }) => {
+const GalleryModal: FC<GalleryModalProps> = ({ images, galleryHref, ctaLabel, showCtaSlide = true, labels }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [loadedThumbs, setLoadedThumbs] = useState<Record<number, boolean>>({});
@@ -88,6 +83,7 @@ const GalleryModal: FC<GalleryModalProps> = ({ images, galleryHref, ctaLabel, sh
 				galleryHref={galleryHref}
 				ctaLabel={ctaLabel}
 				showCtaSlide={showCtaSlide}
+				labels={labels}
 			/>
 		</>
 	);

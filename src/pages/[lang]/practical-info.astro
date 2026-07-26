@@ -1,8 +1,11 @@
 ---
 import { getEntry } from "astro:content";
+import { marked } from "marked";
 import { getI18n, getStaticLangPaths, getPath } from "../../i18n";
 import Layout from "../../layouts/Layout.astro";
 import PageHeader from "../../components/ui/PageHeader.astro";
+import Section from "../../components/ui/Section.astro";
+import practicalInfoHeroImage from "../../assets/valtice_zamek_noc.png";
 
 export const getStaticPaths = getStaticLangPaths;
 
@@ -18,23 +21,17 @@ if (!pageEntry) {
 
 const { title, description, sections = [] } = pageEntry.data;
 
-// Process sections markdown content
-type Section = {
-	title?: string;
-	content: string;
-	image?: {
-		src: string;
-	};
-	imageAlt?: string;
-	imageCaption?: string;
-	variant: "plain" | "image-left" | "image-right";
-	background: "light" | "dark" | "parallax";
-};
+const processedSections = await Promise.all(
+	sections.map(async (section) => ({
+		...section,
+		htmlContent: await marked.parse(section.content),
+	}))
+);
 ---
 
-<Layout lang={lang} title={t.nav.practicalInfo}>
+<Layout lang={lang} title={title} description={description}>
 	<PageHeader
-		image={sections[0]?.image || { src: "" }}
+		image={sections[0]?.image || practicalInfoHeroImage}
 		title={title}
 		subtitle={description}
 		imagePosition="center 62%"
@@ -43,7 +40,40 @@ type Section = {
 			href: getPath(lang, "concert"),
 		}}
 	/>
-	<section class="container py-24">
-		<h1 class="text-3xl font-bold">{t.nav.practicalInfo}</h1>
-	</section>
+
+	{
+		processedSections.length > 0 ? (
+			processedSections.map((section) => (
+				<Section
+					variant={section.variant}
+					background={section.background}
+					image={
+						section.image
+							? {
+									src: section.image.src,
+									alt: section.imageAlt || "",
+									caption: section.imageCaption,
+								}
+							: undefined
+					}
+				>
+					{section.title && (
+						<h2 class="mb-6 font-heading text-3xl font-bold lg:text-4xl">
+							{section.title}
+						</h2>
+					)}
+					<div
+						class="prose prose-lg max-w-none text-current prose-headings:font-heading prose-headings:font-bold prose-p:font-body prose-p:leading-relaxed prose-strong:font-bold prose-strong:text-current"
+						set:html={section.htmlContent}
+					/>
+				</Section>
+			))
+		) : (
+			<section class="bg-bg-primary py-16 lg:py-24">
+				<div class="container">
+					<p class="font-body text-base text-text-secondary">{description}</p>
+				</div>
+			</section>
+		)
+	}
 </Layout>

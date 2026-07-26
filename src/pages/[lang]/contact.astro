@@ -8,7 +8,7 @@ const { lang } = Astro.params;
 const { t } = getI18n(lang);
 ---
 
-<Layout lang={lang} title={t.nav.contact}>
+<Layout lang={lang} title={t.nav.contact} description={t.meta.contact.description}>
 	<section class="container py-24">
 		<h1 class="text-3xl font-bold">{t.nav.contact}</h1>
 	</section>

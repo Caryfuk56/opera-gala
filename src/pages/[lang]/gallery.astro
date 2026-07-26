@@ -3,21 +3,46 @@ import { getI18n, getStaticLangPaths } from "../../i18n";
 import Layout from "../../layouts/Layout.astro";
 import PageHeader from "../../components/ui/PageHeader.astro";
 import GalleryPage from "../../components/gallery/GalleryPage";
+import { fetchGroupedGallery } from "../../utils/gallery";
+import type { GalleryResponse } from "../../types/gallery";
 import galleryHeroImage from "../../assets/titulni_picture.jpg";
 
 export const getStaticPaths = getStaticLangPaths;
 
 const { lang } = Astro.params;
 const { t } = getI18n(lang);
+
+const cloudName = import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME;
+const apiKey = import.meta.env.CLOUDINARY_API_KEY;
+const apiSecret = import.meta.env.CLOUDINARY_API_SECRET;
+
+let galleryData: GalleryResponse | null = null;
+
+if (cloudName && apiKey && apiSecret) {
+	try {
+		galleryData = await fetchGroupedGallery({ cloudName, apiKey, apiSecret });
+	} catch (error) {
+		console.error("Error fetching gallery data:", error);
+	}
+} else if (import.meta.env.DEV) {
+	const missing = [
+		!cloudName && "PUBLIC_CLOUDINARY_CLOUD_NAME",
+		!apiKey && "CLOUDINARY_API_KEY",
+		!apiSecret && "CLOUDINARY_API_SECRET",
+	].filter(Boolean).join(", ");
+	console.warn(`Gallery page was not loaded. Missing environment variables: ${missing}`);
+}
 ---
 
-<Layout lang={lang} title={t.galleryPage.title}>
+<Layout lang={lang} title={t.galleryPage.title} description={t.meta.gallery.description}>
 	<PageHeader image={galleryHeroImage} title={t.galleryPage.title} subtitle={t.galleryPage.lead} imagePosition="center 35%" />
 	<GalleryPage
 		title={t.galleryPage.title}
+		data={galleryData}
+		cloudName={cloudName}
 		emptyMessage={t.galleryPage.empty}
-		loadingMessage={t.galleryPage.loading}
 		errorMessage={t.galleryPage.error}
-		client:load
+		labels={t.a11y.gallery}
+		client:visible
 	/>
 </Layout>
