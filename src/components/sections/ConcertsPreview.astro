@@ -30,6 +30,7 @@ if (!apiKey || !calendarId) {
 	try {
 		events = await fetchUpcomingEvents({ calendarId, apiKey, maxResults: 3 });
 	} catch (err) {
+		console.error("Error fetching concert preview:", err);
 		loadError = t.concerts.error;
 	}
 }

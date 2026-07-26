@@ -28,12 +28,13 @@ if (!apiKey || !calendarId) {
 	try {
 		events = await fetchUpcomingEvents({ calendarId, apiKey, maxResults: 20 });
 	} catch (err) {
+		console.error("Error fetching concerts:", err);
 		loadError = t.concerts.error;
 	}
 }
 ---
 
-<Layout lang={lang} title={t.concerts.title}>
+<Layout lang={lang} title={t.concerts.title} description={t.meta.concert.description}>
 	<section class="bg-bg-primary py-16 lg:py-24">
 		<div class="container">
 			<h1 class="font-heading text-3xl font-bold text-text-primary sm:text-4xl lg:text-5xl">

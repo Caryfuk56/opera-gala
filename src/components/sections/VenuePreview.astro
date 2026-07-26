@@ -47,8 +47,8 @@ const { t } = getI18n(lang);
 <script>
 	(function () {
 		// Parallax effect for venue background
-		const venueBg = document.querySelector('.venue-bg') as HTMLElement | null;
-		const venueBgImg = document.querySelector('.venue-bg-img') as HTMLImageElement | null;
+		const venueBg = document.querySelector(".venue-bg") as HTMLElement | null;
+		const venueBgImg = document.querySelector(".venue-bg-img") as HTMLImageElement | null;
 		if (!venueBg) return;
 		if (!venueBgImg) return;
 		const venueBgEl = venueBg;
@@ -70,7 +70,7 @@ const { t } = getI18n(lang);
 			const scrollY = window.scrollY;
 			const scrollDelta = scrollY - lastScrollY;
 
-			// Keep the image's top aligned with the section on first render (transform = 0).
+			// Keep the image top aligned with the section on first render.
 			// Then only allow moving the image UP (negative translate) so we never reveal empty space.
 			currentTransform -= scrollDelta * 0.3;
 			currentTransform = Math.min(0, Math.max(-maxShift, currentTransform));
@@ -93,9 +93,9 @@ const { t } = getI18n(lang);
 		if (venueBgImgEl.complete) {
 			measure();
 		} else {
-			venueBgImgEl.addEventListener('load', measure, { once: true });
+			venueBgImgEl.addEventListener("load", measure, { once: true });
 		}
-		window.addEventListener('resize', measure, { passive: true });
-		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener("resize", measure, { passive: true });
+		window.addEventListener("scroll", requestTick, { passive: true });
 	})();
 </script>

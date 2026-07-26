@@ -114,16 +114,31 @@ const hasImage = variant !== "plain" && !!image;
 </section>
 
 <script>
+	let parallaxFrameId: number | null = null;
+
 	function initParallax() {
 		const parallaxElements = document.querySelectorAll<HTMLElement>(".parallax-bg");
 
-		if (!parallaxElements.length) return;
+		if (!parallaxElements.length) {
+			if (parallaxFrameId !== null) {
+				cancelAnimationFrame(parallaxFrameId);
+				parallaxFrameId = null;
+			}
+			return;
+		}
+
+		if (parallaxFrameId !== null) return;
 
 		function updateParallax() {
-			const scrollY = window.scrollY;
 			const windowHeight = window.innerHeight;
+			const activeElements = document.querySelectorAll<HTMLElement>(".parallax-bg");
 
-			parallaxElements.forEach((el) => {
+			if (!activeElements.length) {
+				parallaxFrameId = null;
+				return;
+			}
+
+			activeElements.forEach((el) => {
 				const strength = parseFloat(el.dataset.parallaxStrength || "0.5");
 				const rect = el.parentElement?.getBoundingClientRect();
 
@@ -140,11 +155,10 @@ const hasImage = variant !== "plain" && !!image;
 				}
 			});
 
-			requestAnimationFrame(updateParallax);
+			parallaxFrameId = requestAnimationFrame(updateParallax);
 		}
 
-		// Start loop
-		requestAnimationFrame(updateParallax);
+		parallaxFrameId = requestAnimationFrame(updateParallax);
 	}
 
 	// Run on load

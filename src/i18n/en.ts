@@ -116,6 +116,39 @@ const en = {
 	partners: {
 		title: "Supported by",
 	},
+	meta: {
+		home: {
+			description: "Festive Opera Gala concerts in the unique setting of Valtice Castle.",
+		},
+		concert: {
+			description: "Current program and tickets for Opera Gala concerts in Valtice.",
+		},
+		artists: {
+			description: "Meet the artists and ensemble behind Opera Gala concerts.",
+		},
+		gallery: {
+			description: "Photos and atmosphere from Opera Gala concerts.",
+		},
+		contact: {
+			description: "Contact information for the Opera Gala Valtice project.",
+		},
+	},
+	a11y: {
+		header: {
+			openMenu: "Open menu",
+			closeMenu: "Close menu",
+			mainNavigation: "Main navigation",
+			mobileNavigation: "Mobile navigation",
+		},
+		gallery: {
+			dialog: "Gallery",
+			close: "Close gallery",
+			previous: "Previous image",
+			next: "Next image",
+			scrollLeft: "Scroll left",
+			scrollRight: "Scroll right",
+		},
+	},
 	footer: {
 		description: "A festive opera gala evening in the unique setting of Valtice Castle.",
 		navigation: "Navigation",
