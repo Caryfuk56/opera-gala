@@ -83,10 +83,10 @@ const GalleryPage: FC<Props> = ({ title, emptyMessage, loadingMessage, errorMess
 				if (!res.ok) throw new Error(`HTTP ${res.status}`);
 				const json = (await res.json()) as GalleryResponse;
 				if (!isActive) return;
-				console.log(json);
 				setData(json);
 				setStatus("ready");
-			} catch {
+			} catch (err) {
+				console.error("Failed to load gallery data.", err);
 				if (!isActive) return;
 				setStatus("error");
 			}

@@ -16,6 +16,14 @@ const apiKey = import.meta.env.GOOGLE_CALENDAR_API;
 const calendarId = import.meta.env.GOOGLE_CALENDAR_ID;
 
 if (!apiKey || !calendarId || !id) {
+	if (import.meta.env.DEV) {
+		const missing = [
+			!apiKey && "GOOGLE_CALENDAR_API",
+			!calendarId && "GOOGLE_CALENDAR_ID",
+			!id && "concert id",
+		].filter(Boolean).join(", ");
+		console.warn(`Google Calendar event detail was not loaded. Missing: ${missing}`);
+	}
 	throw new Response(null, { status: 404 });
 }
 
