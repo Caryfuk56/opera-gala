@@ -5,7 +5,7 @@ description: "Opera Gala is Robert Hugo’s concert project, presenting classica
 
 Opera Gala is Robert Hugo’s concert project, presenting classical music in the setting for which it was originally intended – a baroque castle hall where the music resonates naturally, without the effect of a modern concert apparatus.
 
-The dramaturgy connects opera arias, symphonic works, and chamber pieces inspired by the cultural centers of Prague, Vienna, and Valtice. The program draws on the Central European musical tradition of the 17th and 18th centuries and offers listeners a selection of the very finest classical repertoire.
+The dramaturgy connects opera arias, symphonic works, and chamber pieces inspired by the cultural centers of Prague, Vienna, and Valtice. The program draws on the Central European musical tradition of the 17th and 19th centuries and offers listeners a selection of the very finest classical repertoire.
 
 The musicians perform on period instruments or faithful replicas and respect the original arrangements of the works. The interpretation follows historically informed practice, which differs significantly from the modern symphonic tradition – in lightness, color, and dynamic sound.
 

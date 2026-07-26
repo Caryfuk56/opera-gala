@@ -1,14 +1,48 @@
 ---
-import { getI18n, getStaticLangPaths } from "../../i18n";
+import { getEntry } from "astro:content";
+import { getI18n, getStaticLangPaths, getPath } from "../../i18n";
 import Layout from "../../layouts/Layout.astro";
+import PageHeader from "../../components/ui/PageHeader.astro";
 
 export const getStaticPaths = getStaticLangPaths;
 
 const { lang } = Astro.params;
 const { t } = getI18n(lang);
+
+// Get content from collection
+const pageEntry = await getEntry("pages", `${lang}/practical-info`);
+
+if (!pageEntry) {
+	throw new Error(`Could not find content for page: ${lang}/practical-info`);
+}
+
+const { title, description, sections = [] } = pageEntry.data;
+
+// Process sections markdown content
+type Section = {
+	title?: string;
+	content: string;
+	image?: {
+		src: string;
+	};
+	imageAlt?: string;
+	imageCaption?: string;
+	variant: "plain" | "image-left" | "image-right";
+	background: "light" | "dark" | "parallax";
+};
 ---
 
 <Layout lang={lang} title={t.nav.practicalInfo}>
+	<PageHeader
+		image={sections[0]?.image || { src: "" }}
+		title={title}
+		subtitle={description}
+		imagePosition="center 62%"
+		ctaPrimary={{
+			label: t.aboutPage.concertsProgram, // "Upcoming concert" / "Nejbližší koncert"
+			href: getPath(lang, "concert"),
+		}}
+	/>
 	<section class="container py-24">
 		<h1 class="text-3xl font-bold">{t.nav.practicalInfo}</h1>
 	</section>
