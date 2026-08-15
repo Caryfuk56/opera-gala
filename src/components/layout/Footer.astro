@@ -1,8 +1,6 @@
 ---
 import { getI18n, getNavItems, getAlternateUrl } from "../../i18n";
 import IconFacebook from "../ui/icons/IconFacebook.astro";
-import IconInstagram from "../ui/icons/IconInstagram.astro";
-import IconYouTube from "../ui/icons/IconYouTube.astro";
 
 interface Props {
 	lang: string;
@@ -73,6 +71,7 @@ const alternateUrl = getAlternateUrl(Astro.url.pathname, lang, alternateLang);
 						href="https://www.facebook.com/share/1RAcQ18tkn"
 						class="text-text-secondary hover:text-accent transition-colors"
 						target="_blank"
+						rel="noopener noreferrer"
 						aria-label="Facebook"
 					>
 						<IconFacebook class="h-5 w-5" />

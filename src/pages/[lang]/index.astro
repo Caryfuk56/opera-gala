@@ -1,5 +1,5 @@
 ---
-import { getI18n, getStaticLangPaths } from "../../i18n";
+import { getI18n } from "../../i18n";
 import Layout from "../../layouts/Layout.astro";
 import Hero from "../../components/sections/Hero.astro";
 import ConcertsPreview from "../../components/sections/ConcertsPreview.astro";
@@ -10,9 +10,7 @@ import GalleryPreview from "../../components/sections/GalleryPreview.astro";
 import Partners from "../../components/sections/Partners.astro";
 import { fetchUpcomingEvents } from "../../utils/googleCalendar";
 
-export const getStaticPaths = getStaticLangPaths;
-
-const { lang } = Astro.params;
+const lang = Astro.params.lang ?? "cs";
 const { t } = getI18n(lang);
 
 const apiKey = import.meta.env.GOOGLE_CALENDAR_API;
@@ -32,7 +30,7 @@ if (apiKey && calendarId) {
 }
 ---
 
-<Layout lang={lang} title={`${t.hero.title} – Valtice`}>
+<Layout lang={lang} title={`${t.hero.title} - Valtice`} description={t.seo.homeDescription}>
 	<Hero lang={lang} nextConcertId={nextConcertId} />
 	<ConcertsPreview lang={lang} />
 	<AboutProject lang={lang} />

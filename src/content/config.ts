@@ -1,7 +1,7 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection, z } from "astro:content";
 
 const pages = defineCollection({
-	type: 'content',
+	type: "content",
 	schema: ({ image }) => z.object({
 		title: z.string(),
 		description: z.string().optional(),
@@ -11,8 +11,8 @@ const pages = defineCollection({
 			image: image().optional(),
 			imageAlt: z.string().optional(),
 			imageCaption: z.string().optional(),
-			variant: z.enum(['plain', 'image-left', 'image-right']),
-			background: z.enum(['light', 'dark', 'parallax']).default('light'),
+			variant: z.enum(["plain", "image-left", "image-right"]),
+			background: z.enum(["light", "dark", "parallax"]).default("light"),
 		})).optional(),
 	}),
 });

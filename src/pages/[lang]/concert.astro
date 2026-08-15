@@ -1,12 +1,10 @@
 ---
-import { getI18n, getStaticLangPaths } from "../../i18n";
+import { getI18n } from "../../i18n";
 import Layout from "../../layouts/Layout.astro";
 import ConcertPanel from "../../components/sections/ConcertPanel.astro";
 import { fetchUpcomingEvents, parseEventDescription, getEventIsoDate, formatDate, type CalendarEvent } from "../../utils/googleCalendar";
 
-export const getStaticPaths = getStaticLangPaths;
-
-const { lang } = Astro.params;
+const lang = Astro.params.lang ?? "cs";
 const { t } = getI18n(lang);
 
 const apiKey = import.meta.env.GOOGLE_CALENDAR_API;
@@ -33,7 +31,7 @@ if (!apiKey || !calendarId) {
 }
 ---
 
-<Layout lang={lang} title={t.concerts.title}>
+<Layout lang={lang} title={t.concerts.title} description={t.seo.concertDescription}>
 	<section class="bg-bg-primary py-16 lg:py-24">
 		<div class="container">
 			<h1 class="font-heading text-3xl font-bold text-text-primary sm:text-4xl lg:text-5xl">

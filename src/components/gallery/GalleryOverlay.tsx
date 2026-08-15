@@ -1,12 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import type { FC } from "react";
-
-interface GalleryImage {
-	src: string;
-	fullSrc?: string;
-	alt: string;
-	title: string;
-}
+import type { GalleryControlLabels, GalleryImage } from "../../utils/gallery";
 
 interface GalleryOverlayProps {
 	isOpen: boolean;
@@ -15,6 +9,7 @@ interface GalleryOverlayProps {
 	initialIndex: number;
 	galleryHref?: string;
 	ctaLabel?: string;
+	labels: GalleryControlLabels;
 	showCtaSlide?: boolean;
 }
 
@@ -34,6 +29,7 @@ const GalleryOverlay: FC<GalleryOverlayProps> = ({
 	initialIndex,
 	galleryHref,
 	ctaLabel,
+	labels,
 	showCtaSlide = true,
 }) => {
 	const [currentIndex, setCurrentIndex] = useState(initialIndex);
@@ -149,7 +145,7 @@ const GalleryOverlay: FC<GalleryOverlayProps> = ({
 			onTouchEnd={handleTouchEnd}
 			role="dialog"
 			aria-modal="true"
-			aria-label="Galerie"
+			aria-label={labels.gallery}
 			ref={modalRef}
 			tabIndex={-1}
 		>
@@ -158,7 +154,7 @@ const GalleryOverlay: FC<GalleryOverlayProps> = ({
 				type="button"
 				onClick={onClose}
 				className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/40 text-white/80 transition-colors hover:bg-black/60 hover:text-white"
-				aria-label="Zavřít galerii"
+				aria-label={labels.close}
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -185,7 +181,7 @@ const GalleryOverlay: FC<GalleryOverlayProps> = ({
 						goPrev();
 					}}
 					className="absolute left-0 top-0 z-10 flex h-full w-1/4 cursor-w-resize items-center justify-start pl-4 sm:pl-8"
-					aria-label="Předchozí obrázek"
+					aria-label={labels.previous}
 				>
 					<span className="flex h-12 w-12 items-center justify-center rounded-full bg-black/30 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/50">
 						<svg
@@ -214,7 +210,7 @@ const GalleryOverlay: FC<GalleryOverlayProps> = ({
 						goNext();
 					}}
 					className="absolute right-0 top-0 z-10 flex h-full w-1/4 cursor-e-resize items-center justify-end pr-4 sm:pr-8"
-					aria-label="Další obrázek"
+					aria-label={labels.next}
 				>
 					<span className="flex h-12 w-12 items-center justify-center rounded-full bg-black/30 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/50">
 						<svg
@@ -244,7 +240,7 @@ const GalleryOverlay: FC<GalleryOverlayProps> = ({
 						{galleryHref && ctaLabel && (
 							<a
 								href={galleryHref}
-								className="mt-8 inline-flex items-center justify-center rounded px-6 py-3 text-sm font-medium text-text-primary shadow-md transition-all duration-200 cta-primary"
+								className="mt-8 inline-flex items-center justify-center rounded bg-gradient-to-b from-accent to-accent-deep px-6 py-3 text-sm font-medium text-text-primary shadow-md transition-all duration-200 hover:brightness-110"
 							>
 								{ctaLabel}
 							</a>

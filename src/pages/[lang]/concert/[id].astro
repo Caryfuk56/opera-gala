@@ -1,14 +1,12 @@
 ---
-import { getI18n, getStaticLangPaths } from "../../../i18n";
+import { getI18n } from "../../../i18n";
 import Layout from "../../../layouts/Layout.astro";
 import PageHeader from "../../../components/ui/PageHeader.astro";
 import CtaButton from "../../../components/ui/CtaButton.astro";
 import { fetchEventById, parseEventDescription, getEventIsoDate, formatDate, sanitizeProgramHtml } from "../../../utils/googleCalendar";
 import aboutHeroImage from "../../../assets/o_projektu.png"; // reusing hero image for concert detail for now
 
-export const getStaticPaths = getStaticLangPaths;
-
-const { lang } = Astro.params;
+const lang = Astro.params.lang ?? "cs";
 const { id } = Astro.params as Record<string, string | undefined>;
 const { t } = getI18n(lang);
 
@@ -27,7 +25,14 @@ if (!apiKey || !calendarId || !id) {
 	throw new Response(null, { status: 404 });
 }
 
-const event = await fetchEventById({ calendarId, apiKey, id });
+let event;
+try {
+	event = await fetchEventById({ calendarId, apiKey, id });
+} catch (error) {
+	console.error(`Error fetching calendar event ${id}:`, error);
+	throw new Response(t.concerts.error, { status: 503 });
+}
+
 if (!event) {
 	throw new Response(null, { status: 404 });
 }
@@ -36,9 +41,36 @@ const isoDate = getEventIsoDate(event);
 const dateLabel = isoDate ? formatDate(isoDate, lang, "full").full : "";
 const parsed = parseEventDescription(event.description);
 const cleanProgram = parsed.program ? sanitizeProgramHtml(parsed.program.replace(/\n/g, '<br />')) : null;
+const pageDescription = parsed.subtitle || `${dateLabel}. ${t.seo.concertDescription}`;
+const eventJsonLd = {
+	"@context": "https://schema.org",
+	"@type": "MusicEvent",
+	name: event.summary ?? t.concerts.title,
+	description: pageDescription,
+	startDate: isoDate,
+	location: event.location
+		? {
+				"@type": "Place",
+				name: event.location,
+			}
+		: undefined,
+	url: Astro.url.toString(),
+	offers: parsed.ticket
+		? {
+				"@type": "Offer",
+				url: parsed.ticket,
+				availability: "https://schema.org/InStock",
+			}
+		: undefined,
+	organizer: {
+		"@type": "Organization",
+		name: "Opera Gala Valtice",
+	},
+};
 ---
 
-<Layout lang={lang} title={event.summary ?? t.concerts.title}>
+<Layout lang={lang} title={event.summary ?? t.concerts.title} description={pageDescription} type="article">
+	<script is:inline type="application/ld+json" set:html={JSON.stringify(eventJsonLd)} />
 	<PageHeader 
 		image={aboutHeroImage} 
 		title={event.summary ?? t.concerts.title}

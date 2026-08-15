@@ -3,24 +3,20 @@ import type { FC } from "react";
 import GalleryOverlay from "./GalleryOverlay";
 import ErrorDisplay from "../ui/ErrorDisplay";
 import { buildCloudinaryUrl } from "../../utils/cloudinary";
-
-interface GalleryImage {
-	src: string;
-	fullSrc?: string;
-	alt: string;
-	title: string;
-}
+import type { GalleryControlLabels, GalleryImage, GalleryResponse } from "../../utils/gallery";
 
 interface InlineMiniGalleryProps {
 	tag: string;
 	limit?: number;
 	className?: string;
 	title?: string;
+	galleryHref: string;
 	messages: {
 		loading: string;
 		error: string;
 		empty: string;
 		more: string;
+		controls: GalleryControlLabels;
 	};
 }
 
@@ -38,6 +34,7 @@ const InlineMiniGallery: FC<InlineMiniGalleryProps> = ({
 	limit = 10,
 	className = "",
 	title,
+	galleryHref,
 	messages,
 }) => {
 	const [images, setImages] = useState<GalleryImage[]>([]);
@@ -61,7 +58,7 @@ const InlineMiniGallery: FC<InlineMiniGalleryProps> = ({
 				
 				const targetSlug = tag.replace("concert:", "");
 				
-				const data = await res.json();
+				const data = (await res.json()) as GalleryResponse;
 				const resources = data[targetSlug] || [];
 				
 				if (!isActive) return;
@@ -69,20 +66,20 @@ const InlineMiniGallery: FC<InlineMiniGalleryProps> = ({
 				const cloudName = import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME;
 				if (!cloudName) throw new Error("Missing Cloudinary Cloud Name");
 
-				const mappedImages = resources.map((res: any) => ({
+				const mappedImages = resources.map((resource) => ({
 					src: buildCloudinaryUrl({
 						cloudName,
-						publicId: res.public_id,
-						format: res.format,
+						publicId: resource.public_id,
+						format: resource.format,
 						height: 300
 					}),
 					fullSrc: buildCloudinaryUrl({
 						cloudName,
-						publicId: res.public_id,
-						format: res.format
+						publicId: resource.public_id,
+						format: resource.format
 					}),
-					alt: "",
-					title: "",
+					alt: title ?? "",
+					title: title ?? "",
 				}));
 
 				setImages(mappedImages);
@@ -97,7 +94,7 @@ const InlineMiniGallery: FC<InlineMiniGalleryProps> = ({
 		return () => {
 			isActive = false;
 		};
-	}, [tag]);
+	}, [tag, title]);
 
 	// Check scroll state
 	const checkScroll = () => {
@@ -193,7 +190,7 @@ const InlineMiniGallery: FC<InlineMiniGalleryProps> = ({
 								? "bg-accent text-bg-primary shadow-md hover:bg-accent/90 hover:scale-110 cursor-pointer"
 								: "bg-bg-secondary/30 text-text-secondary/30 cursor-default"
 						}`}
-						aria-label="Posunout vlevo"
+						aria-label={messages.controls.previous}
 					>
 						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
 							<polyline points="15 18 9 12 15 6" />
@@ -217,11 +214,13 @@ const InlineMiniGallery: FC<InlineMiniGalleryProps> = ({
 							style={{ scrollSnapType: "x mandatory" }}
 						>
 							{images.slice(0, limit).map((img, idx) => (
-								<div
+								<button
+									type="button"
 									key={idx}
 									className="relative aspect-[4/3] h-48 flex-none cursor-pointer overflow-hidden rounded-lg bg-bg-secondary/20 transition-transform duration-300 hover:scale-[1.02]"
 									style={{ scrollSnapAlign: "start" }}
 									onClick={() => openModal(idx)}
+									aria-label={`${messages.controls.openImage} ${idx + 1}`}
 								>
 									<img
 										src={img.src}
@@ -230,7 +229,7 @@ const InlineMiniGallery: FC<InlineMiniGalleryProps> = ({
 										loading="lazy"
 									/>
 									<div className="absolute inset-0 bg-black/0 transition-colors duration-300 hover:bg-black/10" />
-								</div>
+								</button>
 							))}
 							
 							{/* "More" Link Card */}
@@ -239,7 +238,7 @@ const InlineMiniGallery: FC<InlineMiniGalleryProps> = ({
 								style={{ scrollSnapAlign: "start" }}
 							>
 								<a
-									href="/gallery"
+									href={galleryHref}
 									className="group flex flex-col items-center gap-2 text-text-secondary transition-colors hover:text-text-primary"
 								>
 									<span className="font-heading text-lg font-medium">{messages.more}</span>
@@ -266,7 +265,7 @@ const InlineMiniGallery: FC<InlineMiniGalleryProps> = ({
 								? "bg-accent text-bg-primary shadow-md hover:bg-accent/90 hover:scale-110 cursor-pointer"
 								: "bg-bg-secondary/30 text-text-secondary/30 cursor-default"
 						}`}
-						aria-label="Posunout vpravo"
+						aria-label={messages.controls.next}
 					>
 						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
 							<polyline points="9 18 15 12 9 6" />
@@ -280,8 +279,9 @@ const InlineMiniGallery: FC<InlineMiniGalleryProps> = ({
 				onClose={() => setIsOpen(false)}
 				images={images}
 				initialIndex={clickedIndex}
-				galleryHref="/gallery"
+				galleryHref={galleryHref}
 				ctaLabel={messages.more}
+				labels={messages.controls}
 				showCtaSlide={true}
 			/>
 		</>

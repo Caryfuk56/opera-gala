@@ -7,6 +7,7 @@ import PageHeader from "../../components/ui/PageHeader.astro";
 import Section from "../../components/ui/Section.astro";
 
 export const getStaticPaths = getStaticLangPaths;
+export const prerender = true;
 
 const { lang } = Astro.params;
 const { t } = getI18n(lang);
@@ -41,7 +42,7 @@ const processedSections = await Promise.all(
 );
 ---
 
-<Layout lang={lang} title={title} description={description}>
+<Layout lang={lang} title={title} description={description || t.seo.practicalInfoDescription}>
 	<PageHeader
 		image={sections[0]?.image || { src: "" }}
 		title={title}

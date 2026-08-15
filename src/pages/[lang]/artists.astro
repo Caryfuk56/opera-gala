@@ -12,6 +12,7 @@ import bornImage from "../../assets/adam_born.webp";
 import simunkovaImage from "../../assets/marie-simunkova.jpg";
 
 export const getStaticPaths = getStaticLangPaths;
+export const prerender = true;
 
 type TArtistMedia = Record<
 	string,
@@ -78,7 +79,7 @@ const artists = t.artistsPage.artists.map((artist) => ({
 }));
 ---
 
-<Layout lang={lang} title={t.artistsPage.title}>
+<Layout lang={lang} title={t.artistsPage.title} description={t.seo.artistsDescription}>
 	<PageHeader image={artistsHeroImage} title={t.artistsPage.title} subtitle={t.artistsPage.lead} imagePosition="center 35%" />
 
 	<section class="bg-bg-primary py-16 lg:py-24">
