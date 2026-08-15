@@ -17,6 +17,20 @@ const pages = defineCollection({
 	}),
 });
 
+const partners = defineCollection({
+	type: "data",
+	schema: z.array(z.object({
+		name: z.string(),
+		imgPath: z.string(),
+		url: z.string().url(),
+		dimensions: z.object({
+			width: z.string(),
+			height: z.string(),
+		}).optional(),
+	})),
+});
+
 export const collections = {
 	pages,
+	partners,
 };
