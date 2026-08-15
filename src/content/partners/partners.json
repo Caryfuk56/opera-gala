@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Ticketportal",
+    "imgPath": "src/assets/PLG_ticketportal_rgb_main.jpg",
+    "url": "https://www.ticketportal.cz/"
+  },
+  {
+    "name": "Zámek Valtice",
+    "imgPath": "src/assets/NPU-zamek_valtice-CMYK.jpg",
+    "url": "https://www.zamek-valtice.cz/"
+  }
+]

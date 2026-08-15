@@ -46,9 +46,13 @@ const { t } = getI18n(lang);
 
 <script>
 	(function () {
+		const win = window as Window & { __venueParallaxCleanup?: () => void };
+		win.__venueParallaxCleanup?.();
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
 		// Parallax effect for venue background
-		const venueBg = document.querySelector('.venue-bg') as HTMLElement | null;
-		const venueBgImg = document.querySelector('.venue-bg-img') as HTMLImageElement | null;
+		const venueBg = document.querySelector(".venue-bg") as HTMLElement | null;
+		const venueBgImg = document.querySelector(".venue-bg-img") as HTMLImageElement | null;
 		if (!venueBg) return;
 		if (!venueBgImg) return;
 		const venueBgEl = venueBg;
@@ -93,9 +97,13 @@ const { t } = getI18n(lang);
 		if (venueBgImgEl.complete) {
 			measure();
 		} else {
-			venueBgImgEl.addEventListener('load', measure, { once: true });
+			venueBgImgEl.addEventListener("load", measure, { once: true });
 		}
-		window.addEventListener('resize', measure, { passive: true });
-		window.addEventListener('scroll', requestTick, { passive: true });
+		window.addEventListener("resize", measure, { passive: true });
+		window.addEventListener("scroll", requestTick, { passive: true });
+		win.__venueParallaxCleanup = () => {
+			window.removeEventListener("resize", measure);
+			window.removeEventListener("scroll", requestTick);
+		};
 	})();
 </script>

@@ -115,12 +115,16 @@ const hasImage = variant !== "plain" && !!image;
 
 <script>
 	function initParallax() {
+		const win = window as Window & { __sectionParallaxCleanup?: () => void };
+		win.__sectionParallaxCleanup?.();
+
 		const parallaxElements = document.querySelectorAll<HTMLElement>(".parallax-bg");
 
 		if (!parallaxElements.length) return;
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
+		let ticking = false;
 		function updateParallax() {
-			const scrollY = window.scrollY;
 			const windowHeight = window.innerHeight;
 
 			parallaxElements.forEach((el) => {
@@ -139,12 +143,24 @@ const hasImage = variant !== "plain" && !!image;
 					el.style.transform = `translate3d(0, ${translateY}px, 0)`;
 				}
 			});
-
-			requestAnimationFrame(updateParallax);
 		}
 
-		// Start loop
-		requestAnimationFrame(updateParallax);
+		function requestTick() {
+			if (ticking) return;
+			ticking = true;
+			window.requestAnimationFrame(() => {
+				updateParallax();
+				ticking = false;
+			});
+		}
+
+		window.addEventListener("scroll", requestTick, { passive: true });
+		window.addEventListener("resize", requestTick, { passive: true });
+		win.__sectionParallaxCleanup = () => {
+			window.removeEventListener("scroll", requestTick);
+			window.removeEventListener("resize", requestTick);
+		};
+		requestTick();
 	}
 
 	// Run on load

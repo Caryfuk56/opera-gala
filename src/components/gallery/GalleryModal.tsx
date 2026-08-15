@@ -1,18 +1,13 @@
 import { useState } from "react";
 import type { FC } from "react";
 import GalleryOverlay from "./GalleryOverlay";
-
-interface GalleryImage {
-	src: string;
-	fullSrc?: string;
-	alt: string;
-	title: string;
-}
+import type { GalleryControlLabels, GalleryImage } from "../../utils/gallery";
 
 interface GalleryModalProps {
 	images: GalleryImage[];
 	galleryHref?: string;
 	ctaLabel?: string;
+	labels: GalleryControlLabels;
 	showCtaSlide?: boolean;
 }
 
@@ -25,7 +20,7 @@ const LoadingSpinner: FC<{ className?: string }> = ({ className }) => {
 	);
 };
 
-const GalleryModal: FC<GalleryModalProps> = ({ images, galleryHref, ctaLabel, showCtaSlide = true }) => {
+const GalleryModal: FC<GalleryModalProps> = ({ images, galleryHref, ctaLabel, labels, showCtaSlide = true }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [loadedThumbs, setLoadedThumbs] = useState<Record<number, boolean>>({});
@@ -53,6 +48,7 @@ const GalleryModal: FC<GalleryModalProps> = ({ images, galleryHref, ctaLabel, sh
 								? "col-span-2 row-span-2 aspect-[4/3] sm:aspect-auto"
 								: "aspect-square"
 						}`}
+						aria-label={`${labels.openImage} ${index + 1}`}
 					>
 						{!loadedThumbs[index] && (
 							<div className="absolute inset-0 bg-bg-secondary/60">
@@ -87,6 +83,7 @@ const GalleryModal: FC<GalleryModalProps> = ({ images, galleryHref, ctaLabel, sh
 				initialIndex={currentIndex}
 				galleryHref={galleryHref}
 				ctaLabel={ctaLabel}
+				labels={labels}
 				showCtaSlide={showCtaSlide}
 			/>
 		</>

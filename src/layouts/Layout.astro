@@ -2,14 +2,31 @@
 import "../styles/global.css";
 import Header from "../components/layout/Header.astro";
 import Footer from "../components/layout/Footer.astro";
+import { getAlternateUrl, getI18n } from "../i18n";
 
 interface Props {
 	lang: string;
 	title?: string;
 	description?: string;
+	image?: string;
+	type?: "website" | "article";
 }
 
-const { lang, title = "Opera Gala Valtice", description } = Astro.props;
+const { lang, title, description, image = "/photogalery/mainPage/martin_band.png", type = "website" } = Astro.props;
+const { t, alternateLang } = getI18n(lang);
+const pageTitle = title ?? t.seo.defaultTitle;
+const pageDescription = description || t.seo.defaultDescription;
+const siteOrigin = import.meta.env.PUBLIC_SITE_URL ?? Astro.site?.toString() ?? "https://opera-gala.cz/";
+const canonicalUrl = new URL(Astro.url.pathname, siteOrigin).toString();
+const alternateUrl = new URL(getAlternateUrl(Astro.url.pathname, lang, alternateLang), siteOrigin).toString();
+const imageUrl = new URL(image, siteOrigin).toString();
+const siteJsonLd = {
+	"@context": "https://schema.org",
+	"@type": "Organization",
+	name: "Opera Gala Valtice",
+	url: new URL("/", siteOrigin).toString(),
+	logo: new URL("/favicon.svg", siteOrigin).toString(),
+};
 ---
 
 <!doctype html>
@@ -17,7 +34,20 @@ const { lang, title = "Opera Gala Valtice", description } = Astro.props;
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		{description && <meta name="description" content={description} />}
+		<meta name="description" content={pageDescription} />
+		<link rel="canonical" href={canonicalUrl} />
+		<link rel="alternate" hreflang={lang} href={canonicalUrl} />
+		<link rel="alternate" hreflang={alternateLang} href={alternateUrl} />
+		<meta property="og:type" content={type} />
+		<meta property="og:title" content={pageTitle} />
+		<meta property="og:description" content={pageDescription} />
+		<meta property="og:url" content={canonicalUrl} />
+		<meta property="og:image" content={imageUrl} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={pageTitle} />
+		<meta name="twitter:description" content={pageDescription} />
+		<meta name="twitter:image" content={imageUrl} />
+		<script is:inline type="application/ld+json" set:html={JSON.stringify(siteJsonLd)} />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
@@ -27,7 +57,7 @@ const { lang, title = "Opera Gala Valtice", description } = Astro.props;
 			href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Spectral:wght@400;500;600;700&display=swap"
 			rel="stylesheet"
 		/>
-		<title>{title}</title>
+		<title>{pageTitle}</title>
 	</head>
 	<body class="flex min-h-screen flex-col">
 		<Header lang={lang} />

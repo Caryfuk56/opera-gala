@@ -3,12 +3,13 @@ import { getI18n, getStaticLangPaths } from "../../i18n";
 import Layout from "../../layouts/Layout.astro";
 
 export const getStaticPaths = getStaticLangPaths;
+export const prerender = true;
 
 const { lang } = Astro.params;
 const { t } = getI18n(lang);
 ---
 
-<Layout lang={lang} title={t.nav.contact}>
+<Layout lang={lang} title={t.nav.contact} description={t.seo.contactDescription}>
 	<section class="container py-24">
 		<h1 class="text-3xl font-bold">{t.nav.contact}</h1>
 	</section>

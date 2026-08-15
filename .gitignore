@@ -31,3 +31,6 @@ pnpm-debug.log*
 
 # Local Netlify folder
 .netlify
+
+# Dev folders
+.analysis

@@ -1,5 +1,6 @@
 ---
 import { getI18n } from "../../i18n";
+import { getPartners } from "../../utils/partners";
 
 interface Props {
 	lang: string;
@@ -7,6 +8,7 @@ interface Props {
 
 const { lang } = Astro.props;
 const { t } = getI18n(lang);
+const partners = getPartners();
 ---
 
 <section class="bg-bg-secondary/50 py-16 lg:py-20">
@@ -15,12 +17,34 @@ const { t } = getI18n(lang);
 			{t.partners.title}
 		</h2>
 
-		<div class="mx-auto mt-10 flex max-w-3xl flex-wrap items-center justify-center gap-8 lg:gap-12">
-			{Array.from({ length: 5 }).map((_, i) => (
-				<div class="flex h-12 w-28 items-center justify-center rounded bg-bg-secondary/60 text-xs text-text-secondary/50 lg:h-14 lg:w-32">
-					Logo {i + 1}
-				</div>
-			))}
+		<div class="mx-auto mt-10 flex max-w-4xl flex-wrap items-center justify-center gap-8 lg:gap-12">
+			{
+				partners.map((partner) => {
+					const maxWidth =
+						partner.dimensions.width === "auto" ? "" : ` max-width: ${partner.dimensions.width};`;
+					const imageStyle = `height: ${partner.dimensions.height}; width: auto;${maxWidth}`;
+
+					return (
+						<a
+							href={partner.url}
+							target="_blank"
+							rel="noopener noreferrer"
+							title={partner.name}
+							aria-label={partner.name}
+							class="inline-flex items-center justify-center rounded-sm transition-opacity hover:opacity-85 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-secondary"
+						>
+							<img
+								src={partner.image.src}
+								alt={partner.name}
+								class="max-w-full object-contain"
+								style={imageStyle}
+								loading="lazy"
+								decoding="async"
+							/>
+						</a>
+					);
+				})
+			}
 		</div>
 	</div>
 </section>

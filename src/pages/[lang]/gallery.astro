@@ -1,23 +1,99 @@
 ---
-import { getI18n, getStaticLangPaths } from "../../i18n";
+import { getI18n } from "../../i18n";
 import Layout from "../../layouts/Layout.astro";
 import PageHeader from "../../components/ui/PageHeader.astro";
-import GalleryPage from "../../components/gallery/GalleryPage";
+import GalleryModal from "../../components/gallery/GalleryModal";
 import galleryHeroImage from "../../assets/titulni_picture.jpg";
+import { buildCloudinaryUrl } from "../../utils/cloudinary";
+import { fetchGroupedGallery, formatConcertHeading, type GalleryResponse } from "../../utils/gallery";
 
-export const getStaticPaths = getStaticLangPaths;
-
-const { lang } = Astro.params;
+const lang = Astro.params.lang ?? "cs";
 const { t } = getI18n(lang);
+
+const cloudName = import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME;
+const apiKey = import.meta.env.CLOUDINARY_API_KEY;
+const apiSecret = import.meta.env.CLOUDINARY_API_SECRET;
+let galleryData: GalleryResponse = {};
+let loadError: string | null = null;
+
+if (!cloudName || !apiKey || !apiSecret) {
+	if (import.meta.env.DEV) {
+		const missing = [
+			!cloudName && "PUBLIC_CLOUDINARY_CLOUD_NAME",
+			!apiKey && "CLOUDINARY_API_KEY",
+			!apiSecret && "CLOUDINARY_API_SECRET",
+		].filter(Boolean).join(", ");
+		console.warn(`Gallery page was not loaded. Missing environment variables: ${missing}`);
+	}
+	loadError = t.galleryPage.error;
+} else {
+	try {
+		galleryData = await fetchGroupedGallery({ cloudName, apiKey, apiSecret });
+	} catch (error) {
+		console.error("Failed to load gallery data.", error);
+		loadError = t.galleryPage.error;
+	}
+}
+
+const concertSlugs = Object.keys(galleryData);
+const resolvedCloudName = cloudName ?? "";
+const galleryLabels = {
+	gallery: t.a11y.gallery,
+	close: t.a11y.closeGallery,
+	previous: t.a11y.previousImage,
+	next: t.a11y.nextImage,
+	openImage: t.a11y.openImage,
+};
 ---
 
-<Layout lang={lang} title={t.galleryPage.title}>
+<Layout lang={lang} title={t.galleryPage.title} description={t.seo.galleryDescription}>
 	<PageHeader image={galleryHeroImage} title={t.galleryPage.title} subtitle={t.galleryPage.lead} imagePosition="center 35%" />
-	<GalleryPage
-		title={t.galleryPage.title}
-		emptyMessage={t.galleryPage.empty}
-		loadingMessage={t.galleryPage.loading}
-		errorMessage={t.galleryPage.error}
-		client:load
-	/>
+	<section class="bg-bg-primary py-16 lg:py-24">
+		<div class="container">
+			<h1 class="font-heading text-3xl font-bold text-text-primary sm:text-4xl lg:text-5xl">
+				{t.galleryPage.title}
+			</h1>
+
+			{loadError ? (
+				<p class="mt-6 font-body text-base text-text-secondary">{loadError}</p>
+			) : concertSlugs.length === 0 ? (
+				<p class="mt-6 font-body text-base text-text-secondary">{t.galleryPage.empty}</p>
+			) : (
+				<div class="mt-12 space-y-16">
+					{concertSlugs.map((concertSlug) => {
+						const heading = formatConcertHeading(concertSlug);
+						const images = (galleryData[concertSlug] ?? []).map((resource) => ({
+							src: buildCloudinaryUrl({
+								cloudName: resolvedCloudName,
+								publicId: resource.public_id,
+								format: resource.format,
+								width: 600,
+							}),
+							fullSrc: buildCloudinaryUrl({
+								cloudName: resolvedCloudName,
+								publicId: resource.public_id,
+								format: resource.format,
+							}),
+							alt: concertSlug,
+							title: concertSlug,
+						}));
+
+						return (
+							<section>
+								<div>
+									<h2 class="font-heading text-2xl font-bold text-text-primary sm:text-3xl">
+										{heading.title}
+									</h2>
+									{heading.date && (
+										<p class="mt-2 font-body text-sm text-text-secondary">{heading.date}</p>
+									)}
+								</div>
+								<GalleryModal images={images} labels={galleryLabels} showCtaSlide={false} client:visible />
+							</section>
+						);
+					})}
+				</div>
+			)}
+		</div>
+	</section>
 </Layout>

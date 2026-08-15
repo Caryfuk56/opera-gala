@@ -8,6 +8,7 @@ import Section from "../../components/ui/Section.astro";
 import InlineMiniGallery from "../../components/gallery/InlineMiniGallery";
 
 export const getStaticPaths = getStaticLangPaths;
+export const prerender = true;
 
 const { lang } = Astro.params;
 const { t } = getI18n(lang);
@@ -42,7 +43,7 @@ const processedSections = await Promise.all(
 );
 ---
 
-<Layout lang={lang} title={title} description={description}>
+<Layout lang={lang} title={title} description={description || t.seo.defaultDescription}>
 	<PageHeader
 		image={sections[0]?.image || { src: "" }}
 		title={title}
@@ -91,11 +92,19 @@ const processedSections = await Promise.all(
 								tag="concert:2026-02-12-příprava"
 								limit={10}
 								title={t.gallery.title}
+								galleryHref={getPath(lang, "gallery")}
 								messages={{
 									loading: t.inlineGallery.loading,
 									error: t.inlineGallery.error,
 									empty: t.inlineGallery.empty,
 									more: t.inlineGallery.more,
+									controls: {
+										gallery: t.a11y.gallery,
+										close: t.a11y.closeGallery,
+										previous: t.a11y.previousImage,
+										next: t.a11y.nextImage,
+										openImage: t.a11y.openImage,
+									},
 								}}
 							/>
 						</div>

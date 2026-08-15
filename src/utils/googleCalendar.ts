@@ -1,7 +1,16 @@
 
-import sanitizeHtml from 'sanitize-html';
+import sanitizeHtml from "sanitize-html";
 
 const CALENDAR_TIME_ZONE = "Europe/Prague";
+const SUBTITLE_LABEL_PATTERN = /^(subtitle|subtatile):\s*/i;
+const SUBTITLE_LABEL_ONLY_PATTERN = /^(subtitle|subtatile)$/i;
+
+export class CalendarFetchError extends Error {
+  constructor(message: string, public readonly status?: number) {
+    super(message);
+    this.name = "CalendarFetchError";
+  }
+}
 
 export interface CalendarEvent {
   id: string;
@@ -35,17 +44,15 @@ export async function fetchUpcomingEvents({
     calendarId
   )}/events?key=${apiKey}&timeMin=${now}&singleEvents=true&orderBy=startTime&maxResults=${maxResults}`;
 
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch events: ${response.statusText}`);
-    }
-    const data = await response.json();
-    return data.items || [];
-  } catch (error) {
-    console.error("Error fetching calendar events:", error);
-    return [];
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new CalendarFetchError(
+      `Failed to fetch events: ${response.statusText}`,
+      response.status
+    );
   }
+  const data = await response.json();
+  return data.items || [];
 }
 
 export interface FetchEventByIdOptions {
@@ -63,17 +70,15 @@ export async function fetchEventById({
     calendarId
   )}/events/${encodeURIComponent(id)}?key=${apiKey}`;
 
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      if (response.status === 404) return null;
-      throw new Error(`Failed to fetch event: ${response.statusText}`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error(`Error fetching calendar event ${id}:`, error);
-    return null;
+  const response = await fetch(url);
+  if (!response.ok) {
+    if (response.status === 404) return null;
+    throw new CalendarFetchError(
+      `Failed to fetch event: ${response.statusText}`,
+      response.status
+    );
   }
+  return await response.json();
 }
 
 export function getEventIsoDate(event: CalendarEvent): string | null {
@@ -92,7 +97,7 @@ export interface FormattedDate {
 export function formatDate(
   isoDate: string,
   lang: string = "cs",
-  variant: "short" | "full" = "short"
+  _variant: "short" | "full" = "short"
 ): FormattedDate {
   const date = new Date(isoDate);
   const locale = lang === "en" ? "en-US" : "cs-CZ";
@@ -139,21 +144,20 @@ export function parseEventDescription(description?: string): {
 
   // Pre-process description to handle HTML from Google Calendar
   const cleanText = description
-    .replace(/<br\s*\/?>/gi, '\n') // Replace <br> with newlines
-    .replace(/<\/p>/gi, '\n')      // Replace </p> with newlines
-    .replace(/<[^>]+>/g, '');      // Strip remaining tags
+    .replace(/<br\s*\/?>/gi, "\n") // Replace <br> with newlines
+    .replace(/<\/p>/gi, "\n")      // Replace </p> with newlines
+    .replace(/<[^>]+>/g, "");      // Strip remaining tags
 
   // Decode HTML entities (basic ones)
   const decodedText = cleanText
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"');
 
   const lines = decodedText.split("\n");
   let ticket: string | undefined;
-  let program: string | undefined;
   const subtitleParts: string[] = [];
   const programLines: string[] = [];
   let isProgramSection = false;
@@ -171,8 +175,8 @@ export function parseEventDescription(description?: string): {
       isProgramSection = true;
     } else if (isProgramSection) {
       programLines.push(trimmed);
-    } else if (trimmed) {
-      subtitleParts.push(trimmed);
+    } else if (trimmed && !SUBTITLE_LABEL_ONLY_PATTERN.test(trimmed)) {
+      subtitleParts.push(trimmed.replace(SUBTITLE_LABEL_PATTERN, ""));
     }
   }
 
@@ -185,9 +189,9 @@ export function parseEventDescription(description?: string): {
 
 export function sanitizeProgramHtml(html: string): string {
   return sanitizeHtml(html, {
-    allowedTags: ['b', 'i', 'em', 'strong', 'a', 'p', 'br', 'ul', 'li'],
+    allowedTags: ["b", "i", "em", "strong", "a", "p", "br", "ul", "li"],
     allowedAttributes: {
-      'a': ['href']
+      "a": ["href"]
     }
   });
 }
