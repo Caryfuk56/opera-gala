@@ -46,6 +46,10 @@ const cs = {
 		empty: "Momentálně nejsou vypsané žádné nadcházející koncerty.",
 		error: "Koncerty se nepodařilo načíst. Zkuste to prosím později.",
 	},
+	importantMessages: {
+		title: "Důležitá upozornění",
+		loadMore: "Načíst další",
+	},
 	about: {
 		title: "O projektu Opera Gala",
 		text: [
