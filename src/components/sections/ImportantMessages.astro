@@ -1,0 +1,125 @@
+---
+import { getEntry } from "astro:content";
+import { getI18n, getPath } from "../../i18n";
+
+interface Props {
+	lang: string;
+}
+
+const { lang } = Astro.props;
+const { t } = getI18n(lang);
+const entry = await getEntry("importantMessages", "messages");
+const initialVisibleCount = 3;
+
+const messages = (entry?.data ?? [])
+	.filter((message) => message.lang === lang)
+	.sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt));
+
+const hasMoreMessages = messages.length > initialVisibleCount;
+
+const dateFormatter = new Intl.DateTimeFormat(lang === "cs" ? "cs-CZ" : "en-US", {
+	day: "numeric",
+	month: "numeric",
+	year: "numeric",
+});
+---
+
+{
+	messages.length > 0 && (
+		<section class="bg-accent-wine py-20 text-text-primary lg:py-28" data-important-messages>
+			<div class="container">
+				<div class="mx-auto max-w-4xl">
+					<h2 class="font-heading text-3xl font-bold sm:text-4xl lg:text-5xl">
+						{t.importantMessages.title}
+					</h2>
+
+					<div class="mt-10 space-y-8">
+						{messages.map((message, index) => (
+							<article
+								class="border-t border-text-primary/20 pt-8"
+								data-important-message
+								hidden={index >= initialVisibleCount}
+							>
+								<h3 class="font-heading text-2xl font-bold lg:text-3xl">
+									{message.title}
+								</h3>
+								<p class="mt-2 font-body text-sm font-medium text-text-primary/80">
+									<time datetime={message.publishedAt}>
+										{dateFormatter.format(new Date(`${message.publishedAt}T12:00:00`))}
+									</time>
+								</p>
+								<div class="mt-5 space-y-4 font-body text-lg leading-relaxed lg:text-xl">
+									{message.body.map((paragraph) => (
+										<p>
+											{paragraph.parts.map((part) =>
+												part.href ? (
+													<a
+														href={getPath(lang, part.href)}
+														class="font-semibold text-text-primary underline decoration-text-primary/60 underline-offset-4 transition-colors hover:text-accent focus:outline-none focus:ring-2 focus:ring-text-primary focus:ring-offset-2 focus:ring-offset-accent-wine"
+													>
+														{part.text}
+													</a>
+												) : (
+													part.text
+												),
+											)}
+										</p>
+									))}
+								</div>
+							</article>
+						))}
+					</div>
+
+					{hasMoreMessages && (
+						<button
+							type="button"
+							class="mt-10 inline-flex items-center justify-center rounded border border-text-primary/30 px-6 py-3 font-body text-sm font-semibold text-text-primary transition-colors hover:bg-text-primary hover:text-accent-wine focus:outline-none focus:ring-2 focus:ring-text-primary focus:ring-offset-2 focus:ring-offset-accent-wine"
+							data-important-messages-load-more
+						>
+							{t.importantMessages.loadMore}
+						</button>
+					)}
+				</div>
+			</div>
+		</section>
+	)
+}
+
+{
+	hasMoreMessages && (
+		<script>
+			function initImportantMessages() {
+				document.querySelectorAll<HTMLElement>("[data-important-messages]").forEach((section) => {
+					if (section.dataset.importantMessagesReady === "true") return;
+
+					const button = section.querySelector<HTMLButtonElement>("[data-important-messages-load-more]");
+					if (!button) return;
+
+					const hiddenMessages = Array.from(
+						section.querySelectorAll<HTMLElement>("[data-important-message][hidden]"),
+					);
+
+					if (!hiddenMessages.length) {
+						button.hidden = true;
+						return;
+					}
+
+					section.dataset.importantMessagesReady = "true";
+					button.addEventListener(
+						"click",
+						() => {
+							hiddenMessages.forEach((message) => {
+								message.hidden = false;
+							});
+							button.hidden = true;
+						},
+						{ once: true },
+					);
+				});
+			}
+
+			initImportantMessages();
+			document.addEventListener("astro:page-load", initImportantMessages);
+		</script>
+	)
+}

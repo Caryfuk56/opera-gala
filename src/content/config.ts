@@ -30,7 +30,23 @@ const partners = defineCollection({
 	})),
 });
 
+const importantMessages = defineCollection({
+	type: "data",
+	schema: z.array(z.object({
+		lang: z.enum(["cs", "en"]),
+		title: z.string(),
+		publishedAt: z.string(),
+		body: z.array(z.object({
+			parts: z.array(z.object({
+				text: z.string(),
+				href: z.string().optional(),
+			})),
+		})),
+	})),
+});
+
 export const collections = {
 	pages,
 	partners,
+	importantMessages,
 };

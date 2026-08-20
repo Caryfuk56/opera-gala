@@ -1,0 +1,103 @@
+[
+  {
+    "lang": "cs",
+    "title": "DŮLEŽITÉ UPOZORNĚNÍ",
+    "publishedAt": "2026-08-20",
+    "body": [
+      {
+        "parts": [
+          {
+            "text": "Vzhledem k nejisté předpovědi počasí a souvisejícím technickým problémům přesouváme sobotní představení OPERA GALA do krásného prostředí zámeckého barokního divadla Valtice."
+          }
+        ]
+      },
+      {
+        "parts": [
+          {
+            "text": "Čas představení zůstává nezměněn, ohledně sektorů v hledišti barokního divadla sledujte prosím sekci "
+          },
+          {
+            "text": "Praktické informace",
+            "href": "practical-info"
+          },
+          {
+            "text": "."
+          }
+        ]
+      },
+      {
+        "parts": [
+          {
+            "text": "Naše motto:"
+          }
+        ]
+      },
+      {
+        "parts": [
+          {
+            "text": "Raději bouřka a kroupy na scéně než ve skutečnosti."
+          }
+        ]
+      },
+      {
+        "parts": [
+          {
+            "text": "Omlouváme se za neplánovanou změnu."
+          },
+          {
+            "text": "Zbylé vstupenky budou k dispozici na večerní pokladně do naplnění kapacity divadla."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "lang": "en",
+    "title": "IMPORTANT NOTICE",
+    "publishedAt": "2026-08-20",
+    "body": [
+      {
+        "parts": [
+          {
+            "text": "Due to an uncertain weather forecast and related technical issues, we are moving Saturday's OPERA GALA performance to the Valtice Castle Baroque Theatre."
+          }
+        ]
+      },
+      {
+        "parts": [
+          {
+            "text": "The performance time remains unchanged. For seating sectors in the Baroque Theatre, please follow the "
+          },
+          {
+            "text": "Practical Information",
+            "href": "practical-info"
+          },
+          {
+            "text": " section."
+          }
+        ]
+      },
+      {
+        "parts": [
+          {
+            "text": "We apologize for this unplanned change."
+          }
+        ]
+      },
+      {
+        "parts": [
+          {
+            "text": "Our motto:"
+          }
+        ]
+      },
+      {
+        "parts": [
+          {
+            "text": "Better storm and hail on stage than in real life."
+          }
+        ]
+      }
+    ]
+  }
+]

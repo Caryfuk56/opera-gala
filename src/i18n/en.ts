@@ -46,6 +46,10 @@ const en = {
 		empty: "There are currently no upcoming concerts.",
 		error: "We couldn't load the concerts. Please try again later.",
 	},
+	importantMessages: {
+		title: "Important Notices",
+		loadMore: "Load more",
+	},
 	about: {
 		title: "About Opera Gala",
 		text: [
