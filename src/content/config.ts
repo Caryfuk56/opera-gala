@@ -33,9 +33,14 @@ const partners = defineCollection({
 const importantMessages = defineCollection({
 	type: "data",
 	schema: z.array(z.object({
+		id: z.string(),
 		lang: z.enum(["cs", "en"]),
+		active: z.boolean(),
 		title: z.string(),
+		shortMessage: z.string(),
 		publishedAt: z.string(),
+		practicalInfoUrl: z.string(),
+		concertUrl: z.string().optional(),
 		body: z.array(z.object({
 			parts: z.array(z.object({
 				text: z.string(),
