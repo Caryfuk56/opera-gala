@@ -1,8 +1,12 @@
 [
   {
+    "id": "venue-change-2026-08-20",
     "lang": "cs",
+    "active": true,
     "title": "DŮLEŽITÉ UPOZORNĚNÍ",
+    "shortMessage": "ZMĚNA MÍSTA KONCERTU kvůli počasí",
     "publishedAt": "2026-08-20",
+    "practicalInfoUrl": "practical-info",
     "body": [
       {
         "parts": [
@@ -52,9 +56,13 @@
     ]
   },
   {
+    "id": "venue-change-2026-08-20",
     "lang": "en",
+    "active": true,
     "title": "IMPORTANT NOTICE",
+    "shortMessage": "CONCERT VENUE CHANGE due to weather",
     "publishedAt": "2026-08-20",
+    "practicalInfoUrl": "practical-info",
     "body": [
       {
         "parts": [

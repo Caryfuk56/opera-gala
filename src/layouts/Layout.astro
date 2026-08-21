@@ -60,6 +60,7 @@ const siteJsonLd = {
 		<title>{pageTitle}</title>
 	</head>
 	<body class="flex min-h-screen flex-col">
+		<slot name="top" />
 		<Header lang={lang} />
 		<main class="flex-1">
 			<slot />

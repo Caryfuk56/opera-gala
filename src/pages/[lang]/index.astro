@@ -32,10 +32,20 @@ if (apiKey && calendarId) {
 }
 ---
 
-<Layout lang={lang} title={`${t.hero.title} - Valtice`} description={t.seo.homeDescription}>
+<Layout
+	lang={lang}
+	title={`${t.hero.title} - Valtice`}
+	description={t.seo.homeDescription}
+>
+	{showImportantMessages && (
+		<ImportantMessages
+			slot="top"
+			lang={lang}
+			concertUrl={nextConcertId ? `concert/${nextConcertId}` : undefined}
+		/>
+	)}
 	<Hero lang={lang} nextConcertId={nextConcertId} />
 	<ConcertsPreview lang={lang} />
-	{showImportantMessages && <ImportantMessages lang={lang} />}
 	<AboutProject lang={lang} />
 	<EnsemblePreview lang={lang} />
 	<VenuePreview lang={lang} />

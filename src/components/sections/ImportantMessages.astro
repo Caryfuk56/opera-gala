@@ -4,81 +4,117 @@ import { getI18n, getPath } from "../../i18n";
 
 interface Props {
 	lang: string;
+	concertUrl?: string;
 }
 
-const { lang } = Astro.props;
+const { lang, concertUrl } = Astro.props;
 const { t } = getI18n(lang);
 const entry = await getEntry("importantMessages", "messages");
-const initialVisibleCount = 3;
 
-const messages = (entry?.data ?? [])
-	.filter((message) => message.lang === lang)
-	.sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt));
+const activeAnnouncement = (entry?.data ?? [])
+	.filter((message) => message.lang === lang && message.active)
+	.sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt))[0];
 
-const hasMoreMessages = messages.length > initialVisibleCount;
-
-const dateFormatter = new Intl.DateTimeFormat(lang === "cs" ? "cs-CZ" : "en-US", {
-	day: "numeric",
-	month: "numeric",
-	year: "numeric",
-});
+const resolvedConcertUrl = activeAnnouncement?.concertUrl ?? concertUrl;
+const practicalInfoHref = activeAnnouncement
+	? getPath(lang, activeAnnouncement.practicalInfoUrl)
+	: "";
+const concertHref = resolvedConcertUrl ? getPath(lang, resolvedConcertUrl) : undefined;
+const modalId = `important-announcement-modal-${lang}`;
+const titleId = `${modalId}-title`;
+const descriptionId = `${modalId}-description`;
 ---
 
 {
-	messages.length > 0 && (
-		<section class="bg-accent-wine py-20 text-text-primary lg:py-28" data-important-messages>
-			<div class="container">
-				<div class="mx-auto max-w-4xl">
-					<h2 class="font-heading text-3xl font-bold sm:text-4xl lg:text-5xl">
-						{t.importantMessages.title}
-					</h2>
+	activeAnnouncement && (
+		<section
+			class="relative z-50"
+			aria-label={t.importantMessages.title}
+			data-important-announcement
+			data-announcement-id={activeAnnouncement.id}
+		>
+			<div
+				class="fixed left-0 right-0 top-0 z-50 flex min-h-16 items-center bg-accent-wine text-text-primary shadow-md lg:min-h-11"
+				data-announcement-bar
+			>
+				<div class="container flex flex-col gap-1 py-2 font-body text-sm leading-snug sm:flex-row sm:items-center sm:justify-center sm:gap-3 lg:py-1">
+					<p class="font-semibold uppercase">
+						{activeAnnouncement.shortMessage}
+					</p>
+					<a
+						href={practicalInfoHref}
+						class="w-fit font-semibold underline decoration-text-primary/60 underline-offset-4 transition-colors hover:text-accent focus:outline-none focus:ring-2 focus:ring-text-primary focus:ring-offset-2 focus:ring-offset-accent-wine"
+					>
+						{t.importantMessages.details}
+					</a>
+				</div>
+			</div>
 
-					<div class="mt-10 space-y-8">
-						{messages.map((message, index) => (
-							<article
-								class="border-t border-text-primary/20 pt-8"
-								data-important-message
-								hidden={index >= initialVisibleCount}
-							>
-								<h3 class="font-heading text-2xl font-bold lg:text-3xl">
-									{message.title}
-								</h3>
-								<p class="mt-2 font-body text-sm font-medium text-text-primary/80">
-									<time datetime={message.publishedAt}>
-										{dateFormatter.format(new Date(`${message.publishedAt}T12:00:00`))}
-									</time>
-								</p>
-								<div class="mt-5 space-y-4 font-body text-lg leading-relaxed lg:text-xl">
-									{message.body.map((paragraph) => (
-										<p>
-											{paragraph.parts.map((part) =>
-												part.href ? (
-													<a
-														href={getPath(lang, part.href)}
-														class="font-semibold text-text-primary underline decoration-text-primary/60 underline-offset-4 transition-colors hover:text-accent focus:outline-none focus:ring-2 focus:ring-text-primary focus:ring-offset-2 focus:ring-offset-accent-wine"
-													>
-														{part.text}
-													</a>
-												) : (
-													part.text
-												),
-											)}
-										</p>
-									))}
-								</div>
-							</article>
+			<div
+				class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/70 px-4 py-6"
+				data-announcement-modal
+				hidden
+			>
+				<div
+					class="max-h-[min(42rem,calc(100vh-3rem))] w-full max-w-2xl overflow-y-auto rounded-lg border border-text-primary/15 bg-bg-primary p-6 text-text-primary shadow-lg sm:p-8"
+					role="dialog"
+					aria-modal="true"
+					aria-labelledby={titleId}
+					aria-describedby={descriptionId}
+					tabindex="-1"
+					data-announcement-dialog
+				>
+					<div class="flex items-start justify-between gap-4">
+						<h2 id={titleId} class="font-heading text-2xl font-bold sm:text-3xl">
+							{activeAnnouncement.title}
+						</h2>
+						<button
+							type="button"
+							class="flex h-10 w-10 shrink-0 items-center justify-center rounded border border-text-secondary/30 text-text-primary transition-colors hover:bg-bg-secondary focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-primary"
+							aria-label={t.importantMessages.closeModal}
+							data-announcement-close
+						>
+							<svg class="h-5 w-5" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+							</svg>
+						</button>
+					</div>
+
+					<div id={descriptionId} class="mt-6 space-y-4 font-body text-base leading-relaxed text-text-secondary sm:text-lg">
+						{activeAnnouncement.body.map((paragraph) => (
+							<p>
+								{paragraph.parts.map((part) =>
+									part.href ? (
+										<a
+											href={getPath(lang, part.href)}
+											class="font-semibold text-text-primary underline decoration-text-primary/60 underline-offset-4 transition-colors hover:text-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-primary"
+										>
+											{part.text}
+										</a>
+									) : (
+										part.text
+									),
+								)}
+							</p>
 						))}
 					</div>
 
-					{hasMoreMessages && (
-						<button
-							type="button"
-							class="mt-10 inline-flex items-center justify-center rounded border border-text-primary/30 px-6 py-3 font-body text-sm font-semibold text-text-primary transition-colors hover:bg-text-primary hover:text-accent-wine focus:outline-none focus:ring-2 focus:ring-text-primary focus:ring-offset-2 focus:ring-offset-accent-wine"
-							data-important-messages-load-more
+					<div class="mt-8 flex flex-col gap-3 sm:flex-row">
+						<a
+							href={practicalInfoHref}
+							class="inline-flex items-center justify-center rounded bg-gradient-to-b from-accent to-accent-deep px-5 py-3 text-sm font-semibold text-text-primary shadow-md transition-all duration-200 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-primary"
 						>
-							{t.importantMessages.loadMore}
-						</button>
-					)}
+							{t.importantMessages.practicalInfo}
+						</a>
+						{concertHref && (
+							<a
+								href={concertHref}
+								class="inline-flex items-center justify-center rounded border border-text-secondary/20 bg-bg-secondary/60 px-5 py-3 text-sm font-semibold text-text-primary transition-colors hover:bg-bg-secondary focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-primary"
+							>
+								{t.importantMessages.concertDetail}
+							</a>
+						)}
+					</div>
 				</div>
 			</div>
 		</section>
@@ -86,40 +122,169 @@ const dateFormatter = new Intl.DateTimeFormat(lang === "cs" ? "cs-CZ" : "en-US",
 }
 
 {
-	hasMoreMessages && (
+	activeAnnouncement && (
 		<script>
-			function initImportantMessages() {
-				document.querySelectorAll<HTMLElement>("[data-important-messages]").forEach((section) => {
-					if (section.dataset.importantMessagesReady === "true") return;
+			const STORAGE_KEY = "opera-gala-dismissed-announcement-id";
 
-					const button = section.querySelector<HTMLButtonElement>("[data-important-messages-load-more]");
-					if (!button) return;
+			function initImportantAnnouncement() {
+				document.querySelectorAll<HTMLElement>("[data-important-announcement]").forEach((root) => {
+					if (root.dataset.announcementReady === "true") return;
 
-					const hiddenMessages = Array.from(
-						section.querySelectorAll<HTMLElement>("[data-important-message][hidden]"),
+					const announcementId = root.dataset.announcementId;
+					const modal = root.querySelector<HTMLElement>("[data-announcement-modal]");
+					const dialog = root.querySelector<HTMLElement>("[data-announcement-dialog]");
+					const closeButton = root.querySelector<HTMLButtonElement>("[data-announcement-close]");
+					const bar = root.querySelector<HTMLElement>("[data-announcement-bar]");
+
+					if (!announcementId || !modal || !dialog || !closeButton || !bar) return;
+
+					const currentAnnouncementId = announcementId;
+					const modalElement = modal;
+					const dialogElement = dialog;
+					const closeButtonElement = closeButton;
+					const barElement = bar;
+
+					let previousActiveElement: HTMLElement | null = null;
+					let previousBodyOverflow = "";
+
+					const backgroundElements = Array.from(
+						document.querySelectorAll<HTMLElement>("#site-header, main, footer"),
 					);
 
-					if (!hiddenMessages.length) {
-						button.hidden = true;
-						return;
+					function getFocusableElements() {
+						return Array.from(
+							dialogElement.querySelectorAll<HTMLElement>(
+								'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])',
+							),
+						).filter((element) => !element.hasAttribute("hidden"));
 					}
 
-					section.dataset.importantMessagesReady = "true";
-					button.addEventListener(
-						"click",
-						() => {
-							hiddenMessages.forEach((message) => {
-								message.hidden = false;
-							});
-							button.hidden = true;
-						},
-						{ once: true },
-					);
+					function updateAnnouncementHeight() {
+						document.documentElement.style.setProperty(
+							"--announcement-bar-height",
+							`${barElement.getBoundingClientRect().height}px`,
+						);
+					}
+
+					function getDismissedAnnouncementId() {
+						try {
+							return window.localStorage.getItem(STORAGE_KEY);
+						} catch {
+							return null;
+						}
+					}
+
+					function setDismissedAnnouncementId() {
+						try {
+							window.localStorage.setItem(STORAGE_KEY, currentAnnouncementId);
+						} catch {
+							// Storage can be unavailable in private or restricted browsing contexts.
+						}
+					}
+
+					function setBackgroundDisabled(isDisabled: boolean) {
+						backgroundElements.forEach((element) => {
+							if (isDisabled) {
+								element.setAttribute("aria-hidden", "true");
+								(element as HTMLElement & { inert?: boolean }).inert = true;
+							} else {
+								element.removeAttribute("aria-hidden");
+								(element as HTMLElement & { inert?: boolean }).inert = false;
+							}
+						});
+
+						if (isDisabled) {
+							barElement.setAttribute("aria-hidden", "true");
+							(barElement as HTMLElement & { inert?: boolean }).inert = true;
+						} else {
+							barElement.removeAttribute("aria-hidden");
+							(barElement as HTMLElement & { inert?: boolean }).inert = false;
+						}
+					}
+
+					function openModal() {
+						previousActiveElement = document.activeElement instanceof HTMLElement
+							? document.activeElement
+							: null;
+						previousBodyOverflow = document.body.style.overflow;
+
+						modalElement.hidden = false;
+						modalElement.classList.remove("hidden");
+						modalElement.classList.add("flex");
+						document.body.style.overflow = "hidden";
+						setBackgroundDisabled(true);
+						closeButtonElement.focus();
+						document.addEventListener("keydown", handleKeyDown);
+					}
+
+					function closeModal() {
+						setDismissedAnnouncementId();
+						modalElement.hidden = true;
+						modalElement.classList.add("hidden");
+						modalElement.classList.remove("flex");
+						document.body.style.overflow = previousBodyOverflow;
+						setBackgroundDisabled(false);
+						document.removeEventListener("keydown", handleKeyDown);
+
+						if (previousActiveElement?.isConnected) {
+							previousActiveElement.focus();
+						}
+					}
+
+					function handleKeyDown(event: KeyboardEvent) {
+						if (event.key === "Escape") {
+							closeModal();
+							return;
+						}
+
+						if (event.key !== "Tab") return;
+
+						const focusableElements = getFocusableElements();
+						if (focusableElements.length === 0) {
+							event.preventDefault();
+							dialogElement.focus();
+							return;
+						}
+
+						const first = focusableElements[0];
+						const last = focusableElements[focusableElements.length - 1];
+
+						if (event.shiftKey && document.activeElement === first) {
+							event.preventDefault();
+							last.focus();
+						} else if (!event.shiftKey && document.activeElement === last) {
+							event.preventDefault();
+							first.focus();
+						}
+					}
+
+					closeButtonElement.addEventListener("click", closeModal);
+					modalElement.addEventListener("click", (event) => {
+						if (event.target === modalElement) closeModal();
+					});
+
+					root.dataset.announcementReady = "true";
+					updateAnnouncementHeight();
+
+					const ResizeObserverConstructor = (window as Window & {
+						ResizeObserver?: typeof ResizeObserver;
+					}).ResizeObserver;
+
+					if (ResizeObserverConstructor) {
+						const resizeObserver = new ResizeObserverConstructor(updateAnnouncementHeight);
+						resizeObserver.observe(barElement);
+					} else {
+						window.addEventListener("resize", updateAnnouncementHeight, { passive: true });
+					}
+
+					if (getDismissedAnnouncementId() !== currentAnnouncementId) {
+						openModal();
+					}
 				});
 			}
 
-			initImportantMessages();
-			document.addEventListener("astro:page-load", initImportantMessages);
+			initImportantAnnouncement();
+			document.addEventListener("astro:page-load", initImportantAnnouncement);
 		</script>
 	)
 }

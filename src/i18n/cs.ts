@@ -48,7 +48,10 @@ const cs = {
 	},
 	importantMessages: {
 		title: "Důležitá upozornění",
-		loadMore: "Načíst další",
+		details: "Podrobnosti",
+		closeModal: "Zavřít oznámení",
+		practicalInfo: "Praktické informace",
+		concertDetail: "Detail koncertu",
 	},
 	about: {
 		title: "O projektu Opera Gala",

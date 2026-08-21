@@ -48,7 +48,10 @@ const en = {
 	},
 	importantMessages: {
 		title: "Important Notices",
-		loadMore: "Load more",
+		details: "Details",
+		closeModal: "Close notice",
+		practicalInfo: "Practical information",
+		concertDetail: "Concert detail",
 	},
 	about: {
 		title: "About Opera Gala",

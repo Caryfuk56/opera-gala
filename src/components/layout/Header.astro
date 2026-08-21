@@ -17,7 +17,7 @@ const homeHref = getPath(lang);
 
 <header
 	id="site-header"
-	class="fixed top-0 left-0 right-0 z-40 py-4 lg:py-5 transition-all duration-300"
+	class="fixed left-0 right-0 z-40 py-4 transition-all duration-300 lg:py-5"
 >
 	<div class="container flex items-center justify-between lg:hidden">
 		<a href={homeHref} class="block">
@@ -141,6 +141,10 @@ const homeHref = getPath(lang);
 </nav>
 
 <style is:global>
+	#site-header {
+		top: var(--announcement-bar-height, 0px);
+	}
+
 	.header-logo {
 		width: auto;
 		filter: brightness(0) invert(1);
